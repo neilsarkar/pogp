@@ -1,120 +1,196 @@
 # Portable Open Game Protocol 0.1.0
 
-I am a 15 year veteran software engineer who has spent 4 years developing a game in Unity.
+Game development is hard. It shouldn't be.
 
-I have been shocked and disappointed at the developer experience, and I believe that making games should feel like playing games - the flow state should be prioritized in development.
+Making games should feel like playing games.
 
-A vanilla Unity project allows a developer to get into a flow state with a sub 5 second compile time and instant changes in monobehaviors.
+* People should be able to use the languages and tools they're already familiar with.
 
-However as a project grows and the developer gets locked into the unity ecosystem, the compile time grows and they find they have to replace everything.
+* Developer experience should prioritize immersion in a flow state.
 
-This leads to crunch and people hating their lives and resenting the projects they once loved.
+* Low level problems should have shared solutions.
 
-Goals:
+## Introducing the POG Protocol
 
-* Maintain creative flow state throughout development lifecycle
+The POG Protocol defines language-agnostic binary and json representations of [Inputs](#inputs) and [State](#state).
 
-* Open source sharing of low level best practices for all major distribution platforms
-
-* Developer experience on par with modern web development
-
-* Write native code for each platform
-
-* Networked by default
-
-A game can be thought of as a state machine that consists of the following loop:
-
+This allows us to implement the classic game loop as three independent pieces, each written in any language, framework or engine:
 ```
 while(true) {
 	inputs = readInputs();
 	state = runLogic(inputs, state);
-	render(state)
+	render(state);
 }
 ```
 
-Currently every game engine provides a single language solution that handles each line of this.
+## Interactive Examples
 
-I believe that if there is an open standard for representing inputs and game state, then each step here can be optimized independently.
+https://pogp.games/examples/input
 
-If serialization and deserialization of inputs and state to a binary format can take under 2ms, then either game logic or rendering can easily be rewritten in native code for distribution platforms.
-
-A team can begin prototyping a project in whatever language they're most comfortable in.
-
-The protocol consists of a portable, language-agnostic representation of inputs and state.
-
-### Design Decisions
-
-Binary representations are little-endian as most modern architectures use this encoding.
-
-0,0 represents the top left corner of the screen. This is the standard on the web and in unity.
-
-The protocol does not use floating point numbers to encourage determinism across architectures.
+https://pogp.games/examples/state
 
 ## Inputs
 
 Inputs contain the state of the input at the current frame.
 
-It is the implemnentation's responsibility to expose states like `down`, `up` and `pressed` as well as events like `OnTouchMove`
+Whenever possible, representations are based on open standards.
 
-**Gamepad (a.k.a. Controller)**
+Interactive example: https://pogp.games/examples/input
 
-Based on the open standard
+[Gamepad (a.k.a. Controller) Input](#gamepad-input)
 
-https://developer.mozilla.org/en-US/docs/Web/API/Gamepad
+[Touch Input](#touch-input)
+
+[Mouse Input](#mouse-input)
+
+[Keyboard Input](#keyboard-input)
+
+### **Gamepad Input**
+
+Gamepad input represents what's commonly called a "Controller".
+
+We extend the open standard https://developer.mozilla.org/en-US/docs/Web/API/Gamepad with a standard for generic positional identifiers.
+
+[JSON Schema](#gamepad-json-schema) | [JSON Example](#gamepad-json-example)
+
+[Binary Schema](#gamepad-binary-schema) | [Binary Example](#gamepad-binary-example)
+
+#### **Gamepad JSON Schema**
+
+*id*
+
+* The [Gamepad.id](https://developer.mozilla.org/en-US/docs/Web/API/Gamepad/id) of the gamepad
+
+*vendorId*
+
+* The [vendor id](https://gist.github.com/nondebug/aec93dff7f0f1969f4cc2291b24a3171) of the gamepad.
+
+*productId*
+
+* The [product id](https://gist.github.com/nondebug/aec93dff7f0f1969f4cc2291b24a3171) of the gamepad.
+
+*vendorName*
+
+* A human readable name for the vendor, e.g. `Nintendo`, `Microsoft`, `Sony` etc
+
+*productName*
+
+* A human readable name for the product, e.g. `Left joy-con`, `Xbox Series S`, `Dualshock 5`
+
+*type*
+
+* A string enum representing the type of gamepad `controller` | `other`
+
+*buttons*
+
+* An array of `Button` states
+	* *label*
+		* the text printed on the button, e.g. `Triangle`, `A`, `ZR`
+	* *value*
+		* int representing the percentage depressed with four digits of precision
+	* *touched*
+		* boolean representing whether button is touched
+	* *position*
+		* string enum representing [button position](#button-position) , e.g. `left-face-top`, `right-shoulder-front`
+
+*axes*
+
+* An array of `Axes` states
+	* *hand*
+		* string enum representing hand intended to be used with joystick: `left` | `right` | `unknown`
+	* *value*
+		* an array of two signed longs representing the `x` and `y` position of the thumbstick
+
+#### **Gamepad JSON Example**
 
 ```js
 {
-	type: "controller",
-	manufacturer: "Microsoft",
-	console: "Xbox One",
-	hardwareId: "",
-	// these will be defined in an open standard
-	id: "xboxone",
+	type: 'Gamepad',
+	id: 'Stadia Controller rev. A (STANDARD GAMEPAD Vendor: 18d1 Product: 9400)'
+	vendorName: "Google",
+	productName: "Stadia",
+
 	buttons: [
 		{
-			name: 'A',
-			pressed: true,
-			value: 100
+			label: 'A',
+			position: 'right-face-bottom',
+			value: 100000 // 100%
 		},
 		{
-			name: 'B',
-			pressed: true,
-			value: 50
+			label: 'B',
+			position: 'right-face-right',
+			value: 500600 // 50.06%
 		},
 		{
-			name: 'X',
-			pressed: false
+			label: 'X',
+			position: 'right-face-left',
+			touched: true,
+			value: 0
 		},
 		{
-			name: 'Y',
-			pressed: false
-		}
+			label: 'Y',
+			position: 'right-face-up',
+			value: 0
+		},
+		{
+			label: 'L1',
+			position: 'left-shoulder-front',
+			value: 0
+		},
+		{
+			label: 'L2',
+			position: 'left-shoulder-back',
+			value: 0
+		},
+		// ...
 	],
 	axes: [
 		{
-			name: 'left',
-			// these values are a BigInt in javascript and a 64 bit number in other languages
+			hand: 'left',
 			value: [
-				// x-axis idle
-				0,
-				// y-axis up
-				2147483647
+				0n, // x-axis idle
+				2147483647n // y-axis max up
 			]
 		},
 		{
-			name: 'right',
+			hand: 'right',
 			value: [
-				// x-axis left
-				-2147483647,
-				// y-axis down
-				-2147483647
+				-2147483647, // x-axis full left
+				-2147483647  // y-axis full down
 			]
 		}
 	],
 }
 ```
 
-**Touch**
+#### **Gamepad Binary Schema**
+
+data | example | type | index | length (bytes)
+|-|-|-|-|-|
+`type` | 1 ([gamepad](#reference-input-type))| `byte` | 0 | 1
+`id` | `"Stadia Controller rev. A (STANDARD GAMEPAD Vendor: 18d1 Product: 9400)"` | `string` | 1 | 8192
+`buttons.length` | 12 | `ushort` | 8193 | 2
+`axes.length` | 12 | `ushort` | 8195 | 2
+`buttons` | [[Button](#gamepad-button-binary-schema), [Button](#gamepad-button-binary-schema)] | [Button](#gamepad-button-binary-schema) | 8197 | 69 * `buttons.length`
+`axes` | [[Axes](#gamepad-axes-binary-schema), [Axes](#gamepad-axes-binary-schema)] | [Axes](#gamepad-axes-binary-schema) | 8197 + (69 * `buttons.length`)| 129 * `axes.length`
+
+#### **Gamepad Button Binary Schema**
+
+data | example | type | index | length (bytes)
+|-|-|-|-|-|
+`position` | 2 | `byte` ([ButtonPosition]()) | 0 | 1
+`value` | 100000 | `int` | 1 | 4
+`label` | `"A"` | `string` | 5 | 64
+
+#### **Gamepad Axes Binary Schema**
+
+data | example | type | index | length (bytes)
+|-|-|-|-|-|
+`hand` | 1 | `byte` ([Hand](#hand-enum)) | 0 | 1
+`x` | 100000 | `long` | 1 | 64
+`y` | 100000 | `long` | 65 | 64
+
+### **Touch Input**
 
 ```js
 {
@@ -130,7 +206,7 @@ https://developer.mozilla.org/en-US/docs/Web/API/Gamepad
 }
 ```
 
-**Mouse**
+### **Mouse Input**
 
 ```js
 {
@@ -156,7 +232,7 @@ https://developer.mozilla.org/en-US/docs/Web/API/Gamepad
 }
 ```
 
-**Keyboard**
+### **Keyboard Input**
 
 Keyboard keys are represented using the w3 standard, supporting standard 101, Korean, Brazilian and Japanese keyboards.
 
@@ -273,7 +349,7 @@ Binary encoding:
 
 * array, list and dictionary reading happens after reading the primitives in the state
 
-* strings are utf16 encoded
+* strings are utf32 encoded
 ```
 
 tic tac toe example:
@@ -291,7 +367,7 @@ tic tac toe example:
 
 ```
 // fields
-uinxt 9  // length of array
+uint 9  // length of array
 
 // arrays, lists and dictionaries
 ubyte 0 // top left
@@ -340,3 +416,45 @@ public static string StateFile(string json, string path) {
 }
 
 ```
+
+#### *Button Position Enum*
+
+value | name | example (xbox one)
+-|-|-
+0 | `null`
+1 | `left-face-up` | dpad up
+2 | `left-face-right` | dpad right
+3 | `left-face-down` | dpad down
+4 | `left-face-left` | dpad left
+5 | `left-shoulder-front` | LB
+6 | `left-shoulder-back` | LT
+7 | `left-thumbstick` | L3
+8 | `right-face-up` | Y
+9 | `right-face-right` | B
+10 | `right-face-down` | A
+11 | `right-face-left` | X
+12 | `right-shoulder-front` | RB
+13 | `right-shoulder-back` | RT
+14 | `right-thumbstick` | R3
+15 | `middle` | Xbox Button
+16 | `middle-left` | View Button
+17 | `middle-right` | Menu Button
+
+#### *Input Type Enum*
+
+| value | name |
+|-|-|
+0 | `null`
+1 | `gamepad`
+2 | `touch`
+3 | `mouse`
+4 | `keyboard`
+5 | `custom`
+
+#### *Hand Enum*
+
+value | name
+-|-
+0 | `null`
+1 | `left`
+2 | `right`
