@@ -57,6 +57,10 @@ We extend the open standard https://developer.mozilla.org/en-US/docs/Web/API/Gam
 
 #### **Gamepad JSON Schema**
 
+*type*
+
+* This will be an [Input Type](#input-type-enum) set to `gamepad`
+
 *id*
 
 * The [Gamepad.id](https://developer.mozilla.org/en-US/docs/Web/API/Gamepad/id) of the gamepad
@@ -77,13 +81,9 @@ We extend the open standard https://developer.mozilla.org/en-US/docs/Web/API/Gam
 
 * A human readable name for the product, e.g. `Left joy-con`, `Xbox Series S`, `Dualshock 5`
 
-*type*
-
-* A string enum representing the type of gamepad `controller` | `other`
-
 *buttons*
 
-* An array of `Button` states
+* An array of [Button](#gamepad-button-binary-schema) states
 	* *label*
 		* the text printed on the button, e.g. `Triangle`, `A`, `ZR`
 	* *value*
@@ -91,7 +91,7 @@ We extend the open standard https://developer.mozilla.org/en-US/docs/Web/API/Gam
 	* *touched*
 		* boolean representing whether button is touched
 	* *position*
-		* string enum representing [button position](#button-position) , e.g. `left-face-top`, `right-shoulder-front`
+		* string enum representing [button position](#button-position-enum) , e.g. `left-face-top`, `right-shoulder-front`
 
 *axes*
 
@@ -129,7 +129,7 @@ We extend the open standard https://developer.mozilla.org/en-US/docs/Web/API/Gam
 		},
 		{
 			label: 'Y',
-			position: 'right-face-up',
+			position: 'right-face-top',
 			value: 0
 		},
 		{
@@ -167,7 +167,7 @@ We extend the open standard https://developer.mozilla.org/en-US/docs/Web/API/Gam
 
 data | example | type | index | length (bytes)
 |-|-|-|-|-|
-`type` | 1 ([gamepad](#reference-input-type))| `byte` | 0 | 1
+`type` | 1 | `byte` ([Input Type](#input-type-enum))| 0 | 1
 `id` | `"Stadia Controller rev. A (STANDARD GAMEPAD Vendor: 18d1 Product: 9400)"` | `string` | 1 | 8192
 `buttons.length` | 12 | `ushort` | 8193 | 2
 `axes.length` | 12 | `ushort` | 8195 | 2
@@ -333,14 +333,14 @@ Game state represents the state of the game. This is going to be custom for each
 }
 ```
 
-The json state will exist in both the logic and the renderer, so object structures are not shared, only the values of
+The json state will exist in both the logic and the renderer, so object structures are not shared, only the values
+
+data | example | type | index | length (bytes)
+|-|-|-|-|-|
+`pog major version` | 0 | `int` | 0 | 4
+`pog minor version` | 1 | `int` | 4 | 4
 
 ```
-Binary encoding:
-
-0-32: pog major version
-32-64: pog minor version
-
 * fields are done alphabetically
 
 * vectors and fixed length structs are inline
@@ -422,16 +422,16 @@ public static string StateFile(string json, string path) {
 value | name | example (xbox one)
 -|-|-
 0 | `null`
-1 | `left-face-up` | dpad up
+1 | `left-face-top` | dpad up
 2 | `left-face-right` | dpad right
-3 | `left-face-down` | dpad down
+3 | `left-face-bottom` | dpad down
 4 | `left-face-left` | dpad left
 5 | `left-shoulder-front` | LB
 6 | `left-shoulder-back` | LT
 7 | `left-thumbstick` | L3
-8 | `right-face-up` | Y
+8 | `right-face-top` | Y
 9 | `right-face-right` | B
-10 | `right-face-down` | A
+10 | `right-face-bottom` | A
 11 | `right-face-left` | X
 12 | `right-shoulder-front` | RB
 13 | `right-shoulder-back` | RT
