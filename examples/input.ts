@@ -1,4 +1,4 @@
-import {readGamepad} from './lib.js';
+import {gamepadToBinary, keyboardToBinary, readGamepad} from './lib.js';
 import {InputType, Key} from './enums.js';
 import type { Pog } from './types';
 
@@ -10,6 +10,9 @@ let inputJson : Pog.Inputs = {
 let pre = document.createElement('pre');
 document.body.appendChild(pre);
 
+let binaryPre = document.createElement('pre');
+document.body.appendChild(binaryPre);
+
 let keys : boolean[] = [];
 
 window.addEventListener('keydown', (ev) => {
@@ -20,9 +23,11 @@ window.addEventListener('keyup', (ev) => {
 	keys[Key[ev.code]] = false;
 })
 
-const run = (frame: bigint) => {
-	const start = +new Date;
+window.addEventListener('blur', (ev) => {
+	keys = [];
+})
 
+const run = (frame: bigint) => {
 	const gamepads = navigator.getGamepads();
 	inputJson.frame = frame;
 	inputJson.inputs = [];
@@ -63,11 +68,16 @@ const run = (frame: bigint) => {
 		2
 	);
 
-	const ms = +new Date - start;
+	const gamepadsBinary = inputJson.inputs
+		.filter(input => input.type == InputType.Gamepad)
+		.map(input => gamepadToBinary(input as Pog.GamepadInput));
 
-	if (ms > 3) {
-		console.warn(`frame ${frame} took ${ms}ms`)
-	}
+	const keyboardBinary = inputJson.inputs
+		.filter(input => input.type == InputType.Keyboard)
+		.map(input => keyboardToBinary(input as Pog.KeyboardInput));
+
+	binaryPre.innerText = gamepadsBinary.concat(keyboardBinary)
+		.map(uint8Array => uint8Array.toString()).join("\n")
 }
 
 // browser
@@ -78,8 +88,15 @@ let isApplicationRunning = true;
 let frame : bigint = 0n;
 
 const wrapper = () => {
+	const start = +new Date;
+
 	if (isApplicationRunning) {
 		run(frame++)
+	}
+
+	const ms = +new Date - start;
+	if (ms > 3) {
+		console.warn(`frame ${frame} took ${ms}ms`)
 	}
 
 	requestAnimationFrame(wrapper);

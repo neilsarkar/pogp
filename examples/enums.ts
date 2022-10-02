@@ -20,6 +20,27 @@ export enum ButtonPosition {
 // https://www.w3.org/TR/uievents-code/#key-alphanumeric-writing-system
 export enum Key {
 	Null,
+
+	ArrowDown,
+	ArrowLeft,
+	ArrowRight,
+	ArrowUp,
+
+	Backspace,
+	Tab,
+	CapsLock,
+	Enter,
+	ShiftLeft,
+	ShiftRight,
+	ControlLeft,
+	MetaLeft,
+	AltLeft,
+	Space,
+	AltRight,
+	MetaRight,
+	ContextMenu,
+	ControlRight,
+
 	Backquote,
 	Digit1,
 	Digit2,
@@ -70,19 +91,4 @@ export enum Key {
 	Period,
 	Slash,
 	IntlRo,
-
-	Backspace,
-	Tab,
-	CapsLock,
-	Enter,
-	ShiftLeft,
-	ShiftRight,
-	ControlLeft,
-	MetaLeft,
-	AltLeft,
-	Space,
-	AltRight,
-	MetaRight,
-	ContextMenu,
-	ControlRight
 }

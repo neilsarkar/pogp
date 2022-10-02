@@ -8,15 +8,64 @@ export function readGamepad(gamepad: Gamepad) : Pog.GamepadInput {
 	}
 }
 
+export function gamepadToBinary(input: Pog.GamepadInput) : Uint8Array {
+	const ret = new Uint8Array(buffer, keyboardLength, byteLength(input.buttons.length, input.axes.length))
+	ret[0] = input.type;
+
+	ret[1] = input.buttons.length & 0xff; // least significant 8 bits
+	ret[2] = (input.buttons.length << 8) & 0xff; // next 8 bits
+
+	ret[3] = input.axes.length & 0xff;
+	ret[4] = (input.buttons.length << 8) & 0xff; // next 8 bits
+
+	let offset = 5;
+	for(var button of input.buttons) {
+		ret[offset++] = button.position;
+
+		ret[offset++] = (button.value << 8 * 0) & 0xff;
+		ret[offset++] = (button.value << 8 * 1) & 0xff;
+		ret[offset++] = (button.value << 8 * 2) & 0xff;
+		ret[offset++] = (button.value << 8 * 3) & 0xff;
+	}
+
+	for(var axes of input.axes) {
+		ret[offset++] = axes.hand;
+
+		for (let i = 0n; i < 8n; i++) {
+			ret[offset++] = Number((axes.value[0] << 8n * i) & 0xffn);
+		}
+		for (let i = 0n; i < 8n; i++) {
+			ret[offset++] = Number((axes.value[1] << 8n * i) & 0xffn);
+		}
+	}
+
+	return ret;
+}
+
+const keyboardLength = 1 + 4 + 4;
+
+export function keyboardToBinary(input: Pog.KeyboardInput) : Uint8Array {
+	const ret = new Uint8Array(buffer, 0, keyboardLength);
+	ret.fill(0, 0, ret.length);
+	let offset = 0;
+	for(let i = 0; i < 255; i++) {
+		ret[offset] |= (1 << i) & (input.keys.find(k => k == i) ? 0xff : 0);
+		if (i % 8 == 7) { offset++; }
+	}
+
+	return ret;
+}
+
 const maxButtons = 20;
 const maxAxes = 10;
 const buffer = new ArrayBuffer(
 	byteLength(maxButtons, maxAxes)
 );
 
-function byteLength(numButtons: number, numAxes: number) {
+function byteLength(numButtons: number, numAxes: number) : number {
 	return 1 + 2 + 2 + 8192 + 69 * numButtons + 129 * numAxes;
 }
+
 
 function stadiaController(gamepad: Gamepad) : Pog.GamepadInput {
 	const defaultAxesMapping = [

@@ -245,7 +245,6 @@ https://www.w3.org/TR/uievents-code/#keyboard-mac
 ```js
 {
 	type: "keyboard",
-	layout: 101,
 	keys: [
 		27,
 		65
@@ -254,8 +253,7 @@ https://www.w3.org/TR/uievents-code/#keyboard-mac
 ```
 
 ```
-0-8: unsigned byte of layout
-8-128: bits for each key
+0-128: bits for each key
 ```
 
 **Custom**
