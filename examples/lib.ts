@@ -1,52 +1,62 @@
-import * as Pog from './types';
-import * as PogEnum from './PogEnum.js';
+import { ButtonPosition, Hand, InputType } from './enums.js';
+import type { Pog } from './types'
 
-export function readInput(gamepad: Gamepad) : Pog.Input {
+export function readGamepad(gamepad: Gamepad) : Pog.GamepadInput {
 	switch(gamepad.id) {
 		case 'Stadia Controller rev. A (STANDARD GAMEPAD Vendor: 18d1 Product: 9400)':
 			return stadiaController(gamepad);
 	}
 }
 
-function stadiaController(gamepad: Gamepad) : Pog.Input {
+const maxButtons = 20;
+const maxAxes = 10;
+const buffer = new ArrayBuffer(
+	byteLength(maxButtons, maxAxes)
+);
+
+function byteLength(numButtons: number, numAxes: number) {
+	return 1 + 2 + 2 + 8192 + 69 * numButtons + 129 * numAxes;
+}
+
+function stadiaController(gamepad: Gamepad) : Pog.GamepadInput {
 	const defaultAxesMapping = [
 		{
-			hand: PogEnum.Hand.Left,
+			hand: Hand.Left,
 			value: [0,1],
 		},
 		{
-			hand: PogEnum.Hand.Right,
+			hand: Hand.Right,
 			value: [2,3],
 		}
 	];
 
 	const defaultButtonMapping = [
-		{ label: 'A', position: PogEnum.ButtonPosition.RightFaceBottom },
-		{ label: 'B', position: PogEnum.ButtonPosition.RightFaceRight },
-		{ label: 'X', position: PogEnum.ButtonPosition.RightFaceLeft },
-		{ label: 'Y', position: PogEnum.ButtonPosition.RightFaceTop },
+		{ label: 'A', position: ButtonPosition.RightFaceBottom },
+		{ label: 'B', position: ButtonPosition.RightFaceRight },
+		{ label: 'X', position: ButtonPosition.RightFaceLeft },
+		{ label: 'Y', position: ButtonPosition.RightFaceTop },
 
-		{ label: 'L1', position: PogEnum.ButtonPosition.LeftShoulderFront },
-		{ label: 'R1', position: PogEnum.ButtonPosition.RightShoulderFront },
-		{ label: 'L2', position: PogEnum.ButtonPosition.LeftShoulderBack },
-		{ label: 'R2', position: PogEnum.ButtonPosition.RightShoulderBack },
+		{ label: 'L1', position: ButtonPosition.LeftShoulderFront },
+		{ label: 'R1', position: ButtonPosition.RightShoulderFront },
+		{ label: 'L2', position: ButtonPosition.LeftShoulderBack },
+		{ label: 'R2', position: ButtonPosition.RightShoulderBack },
 
-		{ position: PogEnum.ButtonPosition.MiddleLeft },
-		{ position: PogEnum.ButtonPosition.MiddleRight },
-		{ position: PogEnum.ButtonPosition.LeftThumbstick },
-		{ position: PogEnum.ButtonPosition.RightThumbstick },
+		{ position: ButtonPosition.MiddleLeft },
+		{ position: ButtonPosition.MiddleRight },
+		{ position: ButtonPosition.LeftThumbstick },
+		{ position: ButtonPosition.RightThumbstick },
 
-		{ position: PogEnum.ButtonPosition.LeftFaceTop },
-		{ position: PogEnum.ButtonPosition.LeftFaceBottom },
-		{ position: PogEnum.ButtonPosition.LeftFaceLeft },
-		{ position: PogEnum.ButtonPosition.LeftFaceRight },
+		{ position: ButtonPosition.LeftFaceTop },
+		{ position: ButtonPosition.LeftFaceBottom },
+		{ position: ButtonPosition.LeftFaceLeft },
+		{ position: ButtonPosition.LeftFaceRight },
 
-		{ label: 'S', position: PogEnum.ButtonPosition.Middle }
+		{ label: 'S', position: ButtonPosition.Middle }
 	];
 
 	return {
 		id: gamepad.id,
-		type: PogEnum.InputType.Gamepad,
+		type: InputType.Gamepad,
 		productId: '9400',
 		vendorId: '18d1',
 		axes: defaultAxesMapping.map((mapping) => ({

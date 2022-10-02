@@ -1,5 +1,6 @@
-import {readInput} from './lib.js';
-import * as Pog from './types';
+import {readGamepad} from './lib.js';
+import {InputType, Key} from './enums.js';
+import type { Pog } from './types';
 
 let inputJson : Pog.Inputs = {
 	frame: 0n,
@@ -9,30 +10,51 @@ let inputJson : Pog.Inputs = {
 let pre = document.createElement('pre');
 document.body.appendChild(pre);
 
+let keys : boolean[] = [];
+
+window.addEventListener('keydown', (ev) => {
+	keys[Key[ev.code]] = true;
+})
+
+window.addEventListener('keyup', (ev) => {
+	keys[Key[ev.code]] = false;
+})
+
 const run = (frame: bigint) => {
 	const start = +new Date;
 
 	const gamepads = navigator.getGamepads();
 	inputJson.frame = frame;
+	inputJson.inputs = [];
 	for(var gamepad of gamepads) {
 		if (!gamepad) { continue; }
 
-		inputJson.inputs = [];
 		inputJson.inputs.push(
-			readInput(gamepad)
+			readGamepad(gamepad)
 		)
 	}
+
+	inputJson.inputs.push({
+		type: InputType.Keyboard,
+		keys: keys.map((k, i) => !!k ? i : -1).filter(v => v != -1)
+	})
 
 	const collapsedJson = {
 		...inputJson,
 		inputs: [
-			inputJson.inputs.map(input => ({
-				...input,
-				buttons: input.buttons.filter(b => !!b.value),
-				axes: input.axes.filter(a => !!a.value[0] || !!a.value[1])
-			}))
+			inputJson.inputs.map(collapsed)
 		]
 	};
+
+	function collapsed(input: Pog.Input) {
+		const gamepad = input as Pog.GamepadInput;
+		if (!gamepad.buttons) { return input; }
+		return {
+			...input,
+			buttons: gamepad.buttons.filter(b => !!b.value),
+			axes: gamepad.axes.filter(a => !!a.value)
+		}
+	}
 
 	pre.innerText = JSON.stringify(
 		collapsedJson,

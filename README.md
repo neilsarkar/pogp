@@ -168,11 +168,12 @@ We extend the open standard https://developer.mozilla.org/en-US/docs/Web/API/Gam
 data | example | type | index | length (bytes)
 |-|-|-|-|-|
 `type` | 1 | `byte` ([Input Type](#input-type-enum))| 0 | 1
+`buttons.length` | 12 | `ushort` | 1 | 2
+`axes.length` | 12 | `ushort` | 3 | 2
+`buttons` | [[Button](#gamepad-button-binary-schema), [Button](#gamepad-button-binary-schema)] | [Button](#gamepad-button-binary-schema) | 5 | 69 * `buttons.length`
+`axes` | [[Axes](#gamepad-axes-binary-schema), [Axes](#gamepad-axes-binary-schema)] | [Axes](#gamepad-axes-binary-schema) | 5 + (69 * `buttons.length`)| 129 * `axes.length`
 `id` | `"Stadia Controller rev. A (STANDARD GAMEPAD Vendor: 18d1 Product: 9400)"` | `string` | 1 | 8192
-`buttons.length` | 12 | `ushort` | 8193 | 2
-`axes.length` | 12 | `ushort` | 8195 | 2
-`buttons` | [[Button](#gamepad-button-binary-schema), [Button](#gamepad-button-binary-schema)] | [Button](#gamepad-button-binary-schema) | 8197 | 69 * `buttons.length`
-`axes` | [[Axes](#gamepad-axes-binary-schema), [Axes](#gamepad-axes-binary-schema)] | [Axes](#gamepad-axes-binary-schema) | 8197 + (69 * `buttons.length`)| 129 * `axes.length`
+
 
 #### **Gamepad Button Binary Schema**
 
@@ -236,9 +237,10 @@ data | example | type | index | length (bytes)
 
 Keyboard keys are represented using the w3 standard, supporting standard 101, Korean, Brazilian and Japanese keyboards.
 
-https://www.w3.org/2002/09/tests/keys.html
+https://www.toptal.com/developers/keycode
 
 https://www.w3.org/TR/uievents-code/#keyboard-mac
+
 
 ```js
 {
