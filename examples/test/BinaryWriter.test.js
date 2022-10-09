@@ -19,9 +19,21 @@ describe('BinaryWriter', () => {
 				values.forEach((binaryValue) => {
 					writer.writeBool(binaryValue);
 				})
-				console.log(writer.buffer);
 				assert.equal(writer.buffer[byteIndex], expectedDecimal)
 			})
+		})
+
+		it('plays nicely with other functions that affect offset', function() {
+			const writer = new BinaryWriter(null, 3);
+			writer.writeBool(true);
+			writer.writeBool(true);
+			writer.writeByte(66);
+			writer.writeBool(true);
+			writer.writeBool(false);
+			writer.writeBool(true);
+			assert.equal(writer.buffer[0], 0b00000011);
+			assert.equal(writer.buffer[1], 66);
+			assert.equal(writer.buffer[2], 0b00000101);
 		})
 	})
 
