@@ -168,8 +168,8 @@ We extend the open standard https://developer.mozilla.org/en-US/docs/Web/API/Gam
 data | example | type | index | length (bytes)
 |-|-|-|-|-|
 `type` | 1 | `byte` ([Input Type](#input-type-enum))| 0 | 1
-`buttons.length` | 12 | `ushort` | 1 | 2
-`axes.length` | 12 | `ushort` | 3 | 2
+`buttons.length` | 12 | `uint16` | 1 | 2
+`axes.length` | 12 | `uint16` | 3 | 2
 `buttons` | [[Button](#gamepad-button-binary-schema), [Button](#gamepad-button-binary-schema)] | [Button](#gamepad-button-binary-schema) | 5 | 69 * `buttons.length`
 `axes` | [[Axes](#gamepad-axes-binary-schema), [Axes](#gamepad-axes-binary-schema)] | [Axes](#gamepad-axes-binary-schema) | 5 + (69 * `buttons.length`)| 129 * `axes.length`
 `id` | `"Stadia Controller rev. A (STANDARD GAMEPAD Vendor: 18d1 Product: 9400)"` | `string` | 1 | 8192
@@ -180,7 +180,7 @@ data | example | type | index | length (bytes)
 data | example | type | index | length (bytes)
 |-|-|-|-|-|
 `position` | 2 | `byte` ([ButtonPosition]()) | 0 | 1
-`value` | 100000 | `int` | 1 | 4
+`value` | 100000 | `uint32` | 1 | 4
 `label` | `"A"` | `string` | 5 | 64
 
 #### **Gamepad Axes Binary Schema**
@@ -188,8 +188,8 @@ data | example | type | index | length (bytes)
 data | example | type | index | length (bytes)
 |-|-|-|-|-|
 `hand` | 1 | `byte` ([Hand](#hand-enum)) | 0 | 1
-`x` | 100000 | `long` | 1 | 64
-`y` | 100000 | `long` | 65 | 64
+`x` | 100000 | `int64` | 1 | 64
+`y` | 100000 | `int64` | 65 | 64
 
 ### **Touch Input**
 
