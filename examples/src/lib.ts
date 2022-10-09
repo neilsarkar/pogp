@@ -9,38 +9,29 @@ export function readGamepad(gamepad: Gamepad) : Pog.GamepadInput {
 	}
 }
 
-export function gamepadToBinary(input: Pog.GamepadInput) : Uint8Array {
-	const ret = new Uint8Array(buffer, keyboardLength, byteLength(input.buttons.length, input.axes.length))
-	ret[0] = input.type;
+export function gamepadToBinary(input: Pog.GamepadInput, writer?: BinaryWriter) : Uint8Array {
+	if (!writer) {
+		writer = new BinaryWriter(new Uint8Array(buffer, keyboardLength, byteLength(input.buttons.length, input.axes.length)));
+	}
 
-	ret[1] = input.buttons.length & 0xff; // least significant 8 bits
-	ret[2] = (input.buttons.length << 8) & 0xff; // next 8 bits
+	writer.writeUInt8(input.type);
 
-	ret[3] = input.axes.length & 0xff;
-	ret[4] = (input.axes.length << 8) & 0xff; // next 8 bits
+	writer.writeUInt16(input.buttons.length);
+	writer.writeUInt16(input.axes.length);
 
-	let offset = 5;
-	for(var button of input.buttons) {
-		ret[offset++] = button.position;
-
-		ret[offset++] = (button.value << 8 * 0) & 0xff;
-		ret[offset++] = (button.value << 8 * 1) & 0xff;
-		ret[offset++] = (button.value << 8 * 2) & 0xff;
-		ret[offset++] = (button.value << 8 * 3) & 0xff;
+	for (var button of input.buttons) {
+		writer.writeByte(button.position);
+		writer.writeUInt32(button.value);
 	}
 
 	for(var axes of input.axes) {
-		ret[offset++] = axes.hand;
+		writer.writeByte(axes.hand);
 
-		for (let i = 0n; i < 8n; i++) {
-			ret[offset++] = Number((axes.value[0] << 8n * i) & 0xffn);
-		}
-		for (let i = 0n; i < 8n; i++) {
-			ret[offset++] = Number((axes.value[1] << 8n * i) & 0xffn);
-		}
+		writer.writeInt64(axes.value[0])
+		writer.writeInt64(axes.value[1])
 	}
 
-	return ret;
+	return writer.buffer;
 }
 
 const keyboardLength = 1 + 4 + 4;
@@ -56,17 +47,21 @@ export function keyboardToBinary(input: Pog.KeyboardInput, writer?: BinaryWriter
 	return writer.buffer;
 }
 
-export function toBinaryString(buffer: Uint8Array) : string {
-	let ret = '';
+export function toHexString(buffer: Uint8Array) : string {
+	let ret = '0x';
 	buffer.forEach(byte => {
-		ret += ret.length == 0 ? '' : ' ';
-		let byteString = byte.toString(2);
-		while(byteString.length < 8) {
-			byteString = '0' + byteString;
-		}
+		let byteString = byte.toString(16);
+		if (byteString.length < 2) { byteString = '0'+byteString; }
 		ret += byteString;
 	})
 	return ret;
+}
+
+export function toBinaryString(buffer: Uint8Array) : string {
+	return Array.from(buffer).map(byte => {
+		// https://stackoverflow.com/questions/1267283/how-can-i-pad-a-value-with-leading-zeros
+		return ('00000000' + byte.toString(2)).slice(-8)
+	}).join(' ')
 }
 
 const maxButtons = 20;

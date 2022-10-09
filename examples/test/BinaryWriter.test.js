@@ -37,7 +37,7 @@ describe('BinaryWriter', () => {
 		})
 	})
 
-	describe('writeByte', function() {
+	describe('writeUInt8', function() {
 		let table = [
 			[1, 0x01],
 			[64, 0x40],
@@ -47,14 +47,14 @@ describe('BinaryWriter', () => {
 		table.forEach(([byte, hex]) => {
 			it(`should write ${byte} as 0x${hex.toString(16)}`, function() {
 				const writer = new BinaryWriter(null, 1);
-				writer.writeByte(byte)
+				writer.writeUInt8(byte)
 				assert.equal(writer.buffer[0], hex);
 			})
 		})
 
 		it('should throw an exception if number is higher than max value', function() {
 			const writer = new BinaryWriter(null, 1);
-			assert.throws(() => writer.writeByte(256), {
+			assert.throws(() => writer.writeUInt8(256), {
 				message: 'OverflowException: Tried to write byte 256, must be 0-255'
 			})
 		})

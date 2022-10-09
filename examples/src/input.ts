@@ -1,4 +1,4 @@
-import {gamepadToBinary, keyboardToBinary, readGamepad, toBinaryString} from './lib.js';
+import {gamepadToBinary, keyboardToBinary, readGamepad, toBinaryString, toHexString} from './lib.js';
 import {InputType, Key} from './enums.js';
 import type { Pog } from './types';
 

@@ -17,7 +17,7 @@ export class BinaryWriter {
 		}
 	}
 
-	writeByte(value: number) {
+	writeUInt8(value: number) {
 		if (256 <= value || value < 0) { throw new Error(`OverflowException: Tried to write byte ${value}, must be 0-255`); }
 		this.checkOffsets(1)
 
@@ -56,8 +56,8 @@ export class BinaryWriter {
 		this.buffer[this.offset++] = Number((value >> 8n * 7n) & 0xffn);
 	}
 
-	writeShort(value: number) {
-		this.writeUInt16(value);
+	writeByte(value: number) {
+		this.writeUInt8(value);
 	}
 
 	private checkOffsets(byteLength: number) {
