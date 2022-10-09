@@ -1,4 +1,4 @@
-import {gamepadToBinary, keyboardToBinary, readGamepad} from './lib.js';
+import {gamepadToBinary, keyboardToBinary, readGamepad, toBinaryString} from './lib.js';
 import {InputType, Key} from './enums.js';
 import type { Pog } from './types';
 
@@ -76,8 +76,7 @@ const run = (frame: bigint) => {
 		.filter(input => input.type == InputType.Keyboard)
 		.map(input => keyboardToBinary(input as Pog.KeyboardInput));
 
-	binaryPre.innerText = gamepadsBinary.concat(keyboardBinary)
-		.map(uint8Array => uint8Array.toString()).join("\n")
+	binaryPre.innerText = gamepadsBinary.concat(keyboardBinary).map(toBinaryString).join("\n");
 }
 
 // browser
