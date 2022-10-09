@@ -1,4 +1,4 @@
-import {toBinaryString } from '../lib.js';
+import {toBinaryString } from '../dist/lib.js';
 import assert from 'assert';
 
 describe('toBinaryString', () => {

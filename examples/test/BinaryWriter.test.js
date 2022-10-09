@@ -1,4 +1,4 @@
-import {BinaryWriter} from '../BinaryWriter.js';
+import {BinaryWriter} from '../dist/BinaryWriter.js';
 import assert from 'assert';
 
 describe('BinaryWriter', () => {

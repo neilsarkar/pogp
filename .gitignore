@@ -1,2 +1,2 @@
-examples/*.js
 node_modules/
+dist/
