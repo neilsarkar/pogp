@@ -1,4 +1,5 @@
 import { ButtonPosition, Hand, InputType } from './enums.js';
+import { BinaryWriter } from './BinaryWriter.js';
 import type { Pog } from './types'
 
 export function readGamepad(gamepad: Gamepad) : Pog.GamepadInput {
