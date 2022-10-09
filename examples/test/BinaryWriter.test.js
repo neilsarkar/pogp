@@ -1,6 +1,5 @@
 import {BinaryWriter} from '../dist/BinaryWriter.js';
 import assert from 'assert';
-import { writer } from 'repl';
 
 describe('BinaryWriter', () => {
 	describe('writeBool', function() {

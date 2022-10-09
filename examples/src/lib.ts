@@ -74,7 +74,6 @@ function byteLength(numButtons: number, numAxes: number) : number {
 	return 1 + 2 + 2 + 8192 + 69 * numButtons + 129 * numAxes;
 }
 
-
 function stadiaController(gamepad: Gamepad) : Pog.GamepadInput {
 	const defaultAxesMapping = [
 		{
