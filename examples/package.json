@@ -6,7 +6,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "serve": "serve",
+    "dev": "tsc --watch & python3 -m http.server",
     "test": "mocha"
   },
   "devDependencies": {

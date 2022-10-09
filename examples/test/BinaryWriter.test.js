@@ -1,4 +1,3 @@
-import {toBinaryString } from '../lib.js';
 import {BinaryWriter} from '../BinaryWriter.js';
 import assert from 'assert';
 
@@ -19,24 +18,6 @@ describe('BinaryWriter', () => {
 				writer.writeBool(binaryValue);
 			})
 			assert.equal(writer.buffer[byteIndex], expectedDecimal)
-		})
-
-	})
-})
-
-describe('toBinaryString', () => {
-	let table = [
-		[[0b00000001], '00000001'],
-		[[0b00000001, 0b10000000], '00000001 10000000']
-	];
-
-	table.forEach(([bytes, str]) => {
-		it(`should print ${bytes.join(' ')} as ${str}`, () => {
-			var buff = new Uint8Array(bytes.length);
-			bytes.forEach((b, i) => {
-				buff[i] = b;
-			})
-			assert.equal(toBinaryString(bytes), str)
 		})
 	})
 })

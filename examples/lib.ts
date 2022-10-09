@@ -17,7 +17,7 @@ export function gamepadToBinary(input: Pog.GamepadInput) : Uint8Array {
 	ret[2] = (input.buttons.length << 8) & 0xff; // next 8 bits
 
 	ret[3] = input.axes.length & 0xff;
-	ret[4] = (input.buttons.length << 8) & 0xff; // next 8 bits
+	ret[4] = (input.axes.length << 8) & 0xff; // next 8 bits
 
 	let offset = 5;
 	for(var button of input.buttons) {
@@ -56,21 +56,15 @@ export function keyboardToBinary(input: Pog.KeyboardInput, writer?: BinaryWriter
 	return writer.buffer;
 }
 
-export function writeBool(buffer: Uint8Array, position: number, value: boolean) : number {
-	let bytePosition = Math.floor(position / 8); // 0 = 0, 7 = 0, 8 = 1, 16 = 2
-	let bitPosition = position % 8; // 0 = 0, 7 = 7, 8 = 0
-	if (value) { buffer[bytePosition] |= 1 << bitPosition; }
-	return position + 1;
-}
-
 export function toBinaryString(buffer: Uint8Array) : string {
 	let ret = '';
 	buffer.forEach(byte => {
 		ret += ret.length == 0 ? '' : ' ';
-		ret += byte.toString(2);
-		while(ret.length < 8) {
-			ret = '0' + ret;
+		let byteString = byte.toString(2);
+		while(byteString.length < 8) {
+			byteString = '0' + byteString;
 		}
+		ret += byteString;
 	})
 	return ret;
 }
