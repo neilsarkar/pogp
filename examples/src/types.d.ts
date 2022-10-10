@@ -35,4 +35,8 @@ export declare namespace Pog {
 		value: bigint[],
 		hand?: Hand,
 	}
+
+	export interface Tick {
+		(frame: bigint): void;
+	}
 }
