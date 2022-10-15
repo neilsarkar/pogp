@@ -137,4 +137,8 @@ describe('BinaryWriter', () => {
 			})
 		})
 	})
+
+	describe('writeString', function() {
+		it('will be able to write a string')
+	})
 })

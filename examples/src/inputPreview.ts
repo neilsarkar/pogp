@@ -11,13 +11,6 @@ gameLoop.run.call(gameLoop)
 function tick(frame: bigint) {
 	const {inputJson, keyboard, gamepads} = gameLoop;
 
-	const collapsedJson = {
-		...inputJson,
-		inputs: [
-			inputJson.inputs.map(collapsed)
-		]
-	};
-
 	inputJson.inputs = inputJson.inputs.map(collapsed)
 	pre.innerText = JSON.stringify(
 		inputJson,

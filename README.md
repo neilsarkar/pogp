@@ -1,4 +1,4 @@
-# Portable Open Game Protocol 0.1.0
+# Portable Open Game Protocol 0.1.1
 
 Game development is hard. It shouldn't be.
 
@@ -172,7 +172,6 @@ data | example | type | index | length (bytes)
 `axes.length` | 12 | `uint16` | 3 | 2
 `buttons` | [[Button](#gamepad-button-binary-schema), [Button](#gamepad-button-binary-schema)] | [Button](#gamepad-button-binary-schema) | 5 | 69 * `buttons.length`
 `axes` | [[Axes](#gamepad-axes-binary-schema), [Axes](#gamepad-axes-binary-schema)] | [Axes](#gamepad-axes-binary-schema) | 5 + (69 * `buttons.length`)| 129 * `axes.length`
-`id` | `"Stadia Controller rev. A (STANDARD GAMEPAD Vendor: 18d1 Product: 9400)"` | `string` | 1 | 8192
 
 
 #### **Gamepad Button Binary Schema**
