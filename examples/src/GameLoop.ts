@@ -1,8 +1,7 @@
-import {gamepadToBinary, keyboardToBinary, readGamepad} from './lib';
-import {InputType, Key} from './enums';
+import {readGamepad} from './lib';
+import {InputType} from './enums';
 import type { Pog } from './types';
 import { BrowserInput } from './BrowserInput';
-import { KeyboardSnapshot } from './KeyboardSnapshot';
 import { MarshalInput } from './MarshalInput';
 
 export class GameLoop {
@@ -29,8 +28,7 @@ export class GameLoop {
 
 		window.addEventListener('keydown', (ev) => {
 			if (ev.shiftKey && ev.code == 'KeyP') {
-				this.isApplicationRunning = !this.isApplicationRunning;
-				console.log(`Game is ${(this.isApplicationRunning ? 'Running' : 'Paused')}`);
+				this.togglePause();
 			}
 
 			if (!this.isApplicationRunning && ev.altKey && ev.code == 'KeyP') {
@@ -41,14 +39,17 @@ export class GameLoop {
 
 	run() {
 		let startTime = +new Date;
-		this.readInputs();
-
 		if (this.isApplicationRunning) {
-			this.tick(this.frame++, this.browserInput.keyboardSnapshot);
+			this.tick(this.frame++, this.browserInput.readInput());
 			this.profileFrame(+new Date - startTime);
 		}
 
 		requestAnimationFrame(this.run.bind(this));
+	}
+
+	togglePause() {
+		this.isApplicationRunning = !this.isApplicationRunning;
+		console.log(`Game is ${(this.isApplicationRunning ? 'Running' : 'Paused')}`);
 	}
 
 	private readInputs() {
@@ -63,18 +64,9 @@ export class GameLoop {
 			)
 		}
 
-		this.browserInput.readInput();
-
-		this.inputJson.inputs.push(this.browserInput.keyboardSnapshot.inputs[0]);
-
 		this.gamepads = this.inputJson.inputs
 			.filter(input => input.type == InputType.Gamepad)
 			.map(input => MarshalInput.encodeGamepad(input as Pog.GamepadInput));
-
-		this.keyboard = this.inputJson.inputs
-			.filter(input => input.type == InputType.Keyboard)
-			.map(input => MarshalInput.encodeKeyboard(input as Pog.KeyboardInput));
-
 	}
 
 	// browser

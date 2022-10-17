@@ -1,8 +1,10 @@
-import {MarshalInput} from '../src/MarshalInput';
+import {MarshalInput, MAX_AXES, MAX_BUTTONS} from '../src/MarshalInput';
 import {toBinaryString, toHexString} from '../src/lib';
 import {InputType, ButtonPosition, Hand, Key} from '../src/enums';
 import assert from 'assert';
 import { Pog } from '../src/types';
+
+
 
 describe('MarshalInput', function() {
 	describe('.encodeGamepad', function() {
@@ -118,8 +120,10 @@ describe('MarshalInput', function() {
 
 		table.forEach(input => {
 			it(`processes keys: ${input.keys.join(',')}`, () => {
-				const buffer = MarshalInput.encodeKeyboard(input);
-				const decodedInput = MarshalInput.decodeKeyboard(buffer);
+				const arrayBuffer = new ArrayBuffer(MarshalInput.byteLength(MAX_BUTTONS, MAX_AXES));
+
+				MarshalInput.encodeKeyboard(arrayBuffer, input);
+				const decodedInput = MarshalInput.decodeKeyboard(arrayBuffer);
 
 				expect(decodedInput).toEqual(input);
 			})

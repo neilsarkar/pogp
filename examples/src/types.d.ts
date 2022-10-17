@@ -38,6 +38,6 @@ export declare namespace Pog {
 	}
 
 	export interface Tick {
-		(frame: bigint, keyboard: KeyboardSnapshot): void;
+		(frame: bigint, inputs: ArrayBuffer): void;
 	}
 }

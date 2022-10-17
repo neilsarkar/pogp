@@ -3,10 +3,10 @@ import { BinaryWriter } from "./BinaryWriter";
 import { InputType } from "./enums";
 import { Pog } from "./types";
 
-const MAX_BUTTONS = 20;
-const MAX_AXES = 10;
-const KEYBOARD_LENGTH = 1 + 8 + 8; // type, long, long (16*8 = 128 key bools)
-const KEYBOARD_KEY_COUNT = 128;
+export const MAX_BUTTONS = 20;
+export const MAX_AXES = 10;
+export const KEYBOARD_LENGTH = 1 + 8 + 8; // type, long, long (16*8 = 128 key bools)
+export const KEYBOARD_KEY_COUNT = 128;
 
 export class MarshalInput {
 	static marshalBuffer = new ArrayBuffer(
@@ -79,11 +79,11 @@ export class MarshalInput {
 		return writer.buffer;
 	}
 
-	static encodeKeyboard(input: Pog.KeyboardInput) : Uint8Array {
+	static encodeKeyboard(buffer: ArrayBuffer, input: Pog.KeyboardInput) : Uint8Array {
 		const {keys} = input;
 		const writer = new BinaryWriter(
 			new Uint8Array(
-				MarshalInput.marshalBuffer,
+				buffer,
 				0,
 				KEYBOARD_LENGTH
 			)
@@ -99,8 +99,10 @@ export class MarshalInput {
 		return writer.buffer;
 	}
 
-	static decodeKeyboard(buffer: Uint8Array) : Pog.KeyboardInput {
-		const reader = new BinaryReader(buffer);
+	static decodeKeyboard(buffer: ArrayBuffer) : Pog.KeyboardInput {
+		const reader = new BinaryReader(
+			new Uint8Array(buffer, 0, KEYBOARD_LENGTH)
+		);
 
 		let input : Pog.KeyboardInput = {
 			type: reader.readUint8(),

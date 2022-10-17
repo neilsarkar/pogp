@@ -1,6 +1,7 @@
 import {GameLoop} from './GameLoop';
 import {Key} from './enums';
-import { KeyboardSnapshot } from './KeyboardSnapshot';
+import {KeyboardSnapshot} from './KeyboardSnapshot';
+import { MarshalInput } from './MarshalInput';
 
 let leftPaddle = {
 	div: document.querySelector('.left.paddle') as HTMLDivElement,
@@ -14,10 +15,15 @@ let rightPaddle = {
 	y: 0
 };
 
+const keyboard = new KeyboardSnapshot();
+
 const gameLoop = new GameLoop(tick);
 gameLoop.run();
 
-function tick(frame: bigint, keyboard: KeyboardSnapshot ) {
+function tick(frame: bigint, inputs: ArrayBuffer) {
+	const input = MarshalInput.decodeKeyboard(inputs);
+	keyboard.addInput(input);
+
 	if (keyboard.isKey(Key.ArrowLeft)) {
 		leftPaddle.x--;
 	}
