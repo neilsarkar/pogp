@@ -1,6 +1,6 @@
 import {MarshalInput} from '../src/MarshalInput';
 import {toBinaryString, toHexString} from '../src/lib';
-import {InputType, ButtonPosition, Hand} from '../src/enums';
+import {InputType, ButtonPosition, Hand, Key} from '../src/enums';
 import assert from 'assert';
 import { Pog } from '../src/types';
 
@@ -90,5 +90,39 @@ describe('MarshalInput', function() {
 				expect(decodedInput.axes).toEqual(input.axes);
 			})
 		})
+	})
+
+	describe('.decodeKeyboard', function() {
+		const table: Pog.KeyboardInput[] = [
+			{
+				type: InputType.Keyboard,
+				keys: [],
+			},
+			{
+				type: InputType.Keyboard,
+				keys: [Key.ArrowDown]
+			},
+			{
+				type: InputType.Keyboard,
+				keys: [Key.ArrowDown, Key.ArrowLeft],
+			},
+			{
+				type: InputType.Keyboard,
+				keys: [Key.Backspace, Key.ControlLeft, Key.AltLeft]
+			},
+			{
+				type: InputType.Keyboard,
+				keys: [Key.IntlRo]
+			}
+		];
+
+		table.forEach(input => {
+			it(`processes keys: ${input.keys.join(',')}`, () => {
+				const buffer = MarshalInput.encodeKeyboard(input);
+				const decodedInput = MarshalInput.decodeKeyboard(buffer);
+
+				expect(decodedInput).toEqual(input);
+			})
+		});
 	})
 })

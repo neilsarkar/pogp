@@ -1,12 +1,12 @@
 import { BinaryReader } from "./BinaryReader";
 import { BinaryWriter } from "./BinaryWriter";
 import { InputType } from "./enums";
-import { toBinaryString } from "./lib";
 import { Pog } from "./types";
 
 const MAX_BUTTONS = 20;
 const MAX_AXES = 10;
-const KEYBOARD_LENGTH = 1 + 4 + 4; // type, long, long
+const KEYBOARD_LENGTH = 1 + 8 + 8; // type, long, long (16*8 = 128 key bools)
+const KEYBOARD_KEY_COUNT = 128;
 
 export class MarshalInput {
 	static marshalBuffer = new ArrayBuffer(
@@ -77,6 +77,42 @@ export class MarshalInput {
 		}
 
 		return writer.buffer;
+	}
+
+	static encodeKeyboard(input: Pog.KeyboardInput) : Uint8Array {
+		const {keys} = input;
+		const writer = new BinaryWriter(
+			new Uint8Array(
+				MarshalInput.marshalBuffer,
+				0,
+				KEYBOARD_LENGTH
+			)
+		)
+
+		writer.buffer.fill(0, 0, KEYBOARD_LENGTH);
+		writer.writeUInt8(input.type);
+
+		for(let i = 0; i < KEYBOARD_KEY_COUNT; i++) {
+			const isPressed = !!keys.find(k => k == i);
+			writer.writeBool(isPressed);
+		}
+		return writer.buffer;
+	}
+
+	static decodeKeyboard(buffer: Uint8Array) : Pog.KeyboardInput {
+		const reader = new BinaryReader(buffer);
+
+		let input : Pog.KeyboardInput = {
+			type: reader.readUint8(),
+			keys: []
+		}
+
+		for(let i = 0; i < KEYBOARD_KEY_COUNT; i++) {
+			if (reader.readBool()) {
+				input.keys.push(i)
+			}
+		}
+		return input;
 	}
 
 	static byteLength(numButtons: number, numAxes: number) : number {
