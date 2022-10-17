@@ -9,11 +9,7 @@ export const KEYBOARD_LENGTH = 1 + 8 + 8; // type, long, long (16*8 = 128 key bo
 export const KEYBOARD_KEY_COUNT = 128;
 
 export class MarshalInput {
-	static marshalBuffer = new ArrayBuffer(
-		MarshalInput.byteLength(MAX_BUTTONS, MAX_AXES)
-	);
-
-	static decodeGamepad(buffer: Uint8Array) : Pog.GamepadInput {
+	static decodeGamepad(buffer: ArrayBuffer) : Pog.GamepadInput {
 		let input : Pog.GamepadInput = {
 			type: InputType.Gamepad,
 			id: 'unknown',
@@ -21,7 +17,10 @@ export class MarshalInput {
 			buttons: [],
 		}
 
-		var reader = new BinaryReader(buffer);
+		var reader = new BinaryReader(new Uint8Array(
+			buffer,
+			KEYBOARD_LENGTH
+		));
 
 		input.type = reader.readUint8();
 		const buttonLength = reader.readUint16();
@@ -45,19 +44,17 @@ export class MarshalInput {
 		return input;
 	}
 
-	static encodeGamepad(input: Pog.GamepadInput, writer?: BinaryWriter) : Uint8Array {
+	static encodeGamepad(buffer: ArrayBuffer, input: Pog.GamepadInput) : Uint8Array {
 		let {buttons, axes} = input;
 		buttons = buttons || [];
 		axes = axes || [];
-		if (!writer) {
-			writer = new BinaryWriter(
-				new Uint8Array(
-					MarshalInput.marshalBuffer,
-					KEYBOARD_LENGTH,
-					MarshalInput.byteLength(buttons.length, axes.length)
-				)
-			);
-		}
+		const writer = new BinaryWriter(
+			new Uint8Array(
+				buffer,
+				KEYBOARD_LENGTH,
+				MarshalInput.byteLength(buttons.length, axes.length)
+			)
+		);
 
 		writer.writeUInt8(input.type);
 

@@ -1,7 +1,7 @@
 import { Key } from "./enums";
 import { Pog } from "./types";
 
-const BUFFER_LENGTH = 10;
+export const BUFFER_LENGTH = 10;
 
 export class KeyboardSnapshot {
 	inputs: Pog.KeyboardInput[];

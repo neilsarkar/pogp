@@ -1,8 +1,5 @@
-import {readGamepad} from './lib';
-import {InputType} from './enums';
 import type { Pog } from './types';
 import { BrowserInput } from './BrowserInput';
-import { MarshalInput } from './MarshalInput';
 
 export class GameLoop {
 	isApplicationRunning: boolean;
@@ -10,9 +7,6 @@ export class GameLoop {
 	tick: Pog.Tick;
 
 	// inputs
-	inputJson : Pog.Inputs;
-	gamepads : Uint8Array[];
-	keyboard : Uint8Array[];
 	browserInput : BrowserInput;
 
 	constructor(tick: Pog.Tick) {
@@ -20,11 +14,6 @@ export class GameLoop {
 		this.frame = 0n;
 		this.tick = tick;
 		this.browserInput = new BrowserInput();
-
-		this.inputJson = {
-			frame: 0n,
-			inputs: []
-		}
 
 		window.addEventListener('keydown', (ev) => {
 			if (ev.shiftKey && ev.code == 'KeyP') {
@@ -50,23 +39,6 @@ export class GameLoop {
 	togglePause() {
 		this.isApplicationRunning = !this.isApplicationRunning;
 		console.log(`Game is ${(this.isApplicationRunning ? 'Running' : 'Paused')}`);
-	}
-
-	private readInputs() {
-		const gamepads = navigator.getGamepads();
-		this.inputJson.frame = this.frame;
-		this.inputJson.inputs = [];
-		for(var gamepad of gamepads) {
-			if (!gamepad) { continue; }
-
-			this.inputJson.inputs.push(
-				readGamepad(gamepad)
-			)
-		}
-
-		this.gamepads = this.inputJson.inputs
-			.filter(input => input.type == InputType.Gamepad)
-			.map(input => MarshalInput.encodeGamepad(input as Pog.GamepadInput));
 	}
 
 	// browser

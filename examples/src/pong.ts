@@ -1,7 +1,8 @@
 import {GameLoop} from './GameLoop';
-import {Key} from './enums';
+import {Hand, Key} from './enums';
 import {KeyboardSnapshot} from './KeyboardSnapshot';
 import { MarshalInput } from './MarshalInput';
+import { GamepadSnapshot } from './GamepadSnapshot';
 
 let leftPaddle = {
 	div: document.querySelector('.left.paddle') as HTMLDivElement,
@@ -16,13 +17,17 @@ let rightPaddle = {
 };
 
 const keyboard = new KeyboardSnapshot();
+const gamepad = new GamepadSnapshot();
 
 const gameLoop = new GameLoop(tick);
 gameLoop.run();
 
 function tick(frame: bigint, inputs: ArrayBuffer) {
-	const input = MarshalInput.decodeKeyboard(inputs);
-	keyboard.addInput(input);
+	const kbInput = MarshalInput.decodeKeyboard(inputs);
+	keyboard.addInput(kbInput);
+
+	const gamepadInput = MarshalInput.decodeGamepad(inputs);
+	gamepad.addInput(gamepadInput);
 
 	if (keyboard.isKey(Key.ArrowLeft)) {
 		leftPaddle.x--;
@@ -50,8 +55,10 @@ function tick(frame: bigint, inputs: ArrayBuffer) {
 		rightPaddle.y++;
 	}
 
-	if (frame % 60n == 0n) {
-		console.log(leftPaddle, rightPaddle);
+	const axes = gamepad.getAxes(Hand.Left);
+	if (axes) {
+		rightPaddle.x += Number(axes.value[0]);
+		rightPaddle.y += Number(axes.value[1]);
 	}
 
 	render()

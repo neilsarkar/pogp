@@ -4,8 +4,6 @@ import {InputType, ButtonPosition, Hand, Key} from '../src/enums';
 import assert from 'assert';
 import { Pog } from '../src/types';
 
-
-
 describe('MarshalInput', function() {
 	describe('.encodeGamepad', function() {
 		it('encodes a valid gamePad to binary', function() {
@@ -43,7 +41,8 @@ describe('MarshalInput', function() {
 				]
 			}
 
-			const buffer = MarshalInput.encodeGamepad(input);
+			const arrayBuffer = new ArrayBuffer(MarshalInput.byteLength(MAX_BUTTONS, MAX_AXES));
+			const buffer = MarshalInput.encodeGamepad(arrayBuffer, input);
 
 			assert.equal(toHexString(buffer), '0x0106000000010000000002102700000300000000040000000009102700000b10270000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000');
 		})
@@ -80,8 +79,10 @@ describe('MarshalInput', function() {
 
 		table.forEach(input => {
 			it(`processes ${input.id}`, () => {
-				const buffer = MarshalInput.encodeGamepad(input);
-				const decodedInput = MarshalInput.decodeGamepad(buffer);
+				const arrayBuffer = new ArrayBuffer(MarshalInput.byteLength(MAX_BUTTONS, MAX_AXES));
+
+				MarshalInput.encodeGamepad(arrayBuffer, input);
+				const decodedInput = MarshalInput.decodeGamepad(arrayBuffer);
 
 				if (input.buttons === null) { input.buttons = []; }
 				if (input.axes === null) { input.axes = []; }
