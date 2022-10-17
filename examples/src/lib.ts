@@ -135,3 +135,7 @@ function stadiaController(gamepad: Gamepad) : Pog.GamepadInput {
 function percentAsInt(float: number) : number {
 	return Math.trunc(float * 10000);
 }
+
+export function clamp(value: number, min: number, max: number) {
+	return Math.min(Math.max(value, min), max);
+}

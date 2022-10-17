@@ -3,21 +3,30 @@ import {Hand, Key} from './enums';
 import {KeyboardSnapshot} from './KeyboardSnapshot';
 import { MarshalInput } from './MarshalInput';
 import { GamepadSnapshot } from './GamepadSnapshot';
+import {clamp} from './lib';
+import { Pog } from './types';
 
-let leftPaddle = {
-	div: document.querySelector('.left.paddle') as HTMLDivElement,
-	x: -100,
-	y: 0
-};
+type GameState = {
+	leftPaddle: Pog.Point,
+	rightPaddle: Pog.Point,
+}
 
-let rightPaddle = {
-	div: document.querySelector('.right.paddle') as HTMLDivElement,
-	x: 100,
-	y: 0
-};
+let state = {
+	leftPaddle: {
+		x: 0,
+		y: 50
+	},
+	rightPaddle: {
+		x: 95,
+		y: 50
+	}
+}
 
 const keyboard = new KeyboardSnapshot();
 const gamepad = new GamepadSnapshot();
+
+const p0div = document.querySelector('.left.paddle') as HTMLDivElement;
+const p1div = document.querySelector('.right.paddle') as HTMLDivElement;
 
 const gameLoop = new GameLoop(tick);
 gameLoop.run();
@@ -29,42 +38,63 @@ function tick(frame: bigint, inputs: ArrayBuffer) {
 	const gamepadInput = MarshalInput.decodeGamepad(inputs);
 	gamepad.addInput(gamepadInput);
 
+	logic(keyboard, gamepad);
+	render(state);
+}
+
+function logic(keyboard: KeyboardSnapshot, gamepad: GamepadSnapshot) {
 	if (keyboard.isKey(Key.ArrowLeft)) {
-		leftPaddle.x--;
+		state.leftPaddle.x--;
 	}
 	if (keyboard.isKey(Key.ArrowRight)) {
-		leftPaddle.x++;
+		state.leftPaddle.x++;
 	}
 	if (keyboard.isKey(Key.ArrowUp)) {
-		leftPaddle.y--;
+		state.leftPaddle.y--;
 	}
 	if (keyboard.isKey(Key.ArrowDown)) {
-		leftPaddle.y++;
+		state.leftPaddle.y++;
 	}
 
 	if (keyboard.isKey(Key.KeyA)) {
-		rightPaddle.x--;
+		state.rightPaddle.x--;
 	}
 	if (keyboard.isKey(Key.KeyD)) {
-		rightPaddle.x++;
+		state.rightPaddle.x++;
 	}
 	if (keyboard.isKey(Key.KeyW)) {
-		rightPaddle.y--;
+		state.rightPaddle.y--;
 	}
 	if (keyboard.isKey(Key.KeyS)) {
-		rightPaddle.y++;
+		state.rightPaddle.y++;
 	}
 
 	const axes = gamepad.getAxes(Hand.Left);
 	if (axes) {
-		rightPaddle.x += Number(axes.value[0]);
-		rightPaddle.y += Number(axes.value[1]);
+		state.rightPaddle.x += Number(axes.value[0]);
+		state.rightPaddle.y += Number(axes.value[1]);
 	}
 
-	render()
+	state.leftPaddle.x = clamp(state.leftPaddle.x, 0, 95);
+	state.leftPaddle.y = clamp(state.leftPaddle.y, 0, 95);
+	state.rightPaddle.x = clamp(state.rightPaddle.x, 0, 95);
+	state.rightPaddle.y = clamp(state.rightPaddle.y, 0, 95);
 }
 
-function render() {
-	leftPaddle.div.style.transform = `translate(${leftPaddle.x}px, ${leftPaddle.y}px)`;
-	rightPaddle.div.style.transform = `translate(${rightPaddle.x}px, ${rightPaddle.y}px)`;
+function render(state) {
+	const p0Point = worldToScreen(state.leftPaddle.x, state.leftPaddle.y);
+	const p1Point = worldToScreen(state.rightPaddle.x, state.rightPaddle.y);
+
+	p0div.style.transform = `translate(${p0Point.x}px, ${p0Point.y}px)`;
+	p1div.style.transform = `translate(${p1Point.x}px, ${p1Point.y}px)`;
+}
+
+function worldToScreen(x: number, y: number) : {x: number, y: number}{
+	const vw = window.innerWidth;
+	const vh = window.innerHeight;
+
+	return {
+		x: (x / 100) * vw,
+		y: (y / 100) * vh
+	}
 }
