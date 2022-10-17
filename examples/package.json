@@ -6,7 +6,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "dev": "parcel",
+    "dev": "parcel index.html",
     "test": "jest"
   },
   "devDependencies": {

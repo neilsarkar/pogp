@@ -4,8 +4,35 @@
   <meta charset="UTF-32">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>POG Protocol Input Example</title>
+
+  <style>
+    body { margin: 0; padding: 0; }
+
+    .board {
+      background-color: black;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    .paddle {
+      width: 5vw;
+      height: 10vh;
+      background-color: hotpink;
+      position: absolute;
+    }
+
+    .paddle.right {
+      background-color: cornflowerblue;
+      transform: translate(20,20);
+    }
+  </style>
 </head>
 <body>
   <script type="module" src="src/pong.ts"></script>
+
+  <div class="board">
+    <div class="left paddle"></div>
+    <div class="right paddle"></div>
+  </div>
 </body>
 </html>
