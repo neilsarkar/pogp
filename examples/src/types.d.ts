@@ -1,4 +1,5 @@
 import { InputType, ButtonPosition, Hand, Key } from "./enums"
+import { KeyboardSnapshot } from "./KeyboardSnapshot";
 
 export declare namespace Pog {
 	export type Inputs = {
@@ -37,6 +38,6 @@ export declare namespace Pog {
 	}
 
 	export interface Tick {
-		(frame: bigint): void;
+		(frame: bigint, keyboard: KeyboardSnapshot): void;
 	}
 }

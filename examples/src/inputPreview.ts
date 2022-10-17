@@ -1,6 +1,7 @@
-import {toBinaryString} from './lib.js';
+import {toBinaryString} from './lib';
 import type { Pog } from './types';
-import { GameLoop } from './GameLoop.js';
+import { GameLoop } from './GameLoop';
+import { KeyboardSnapshot } from './KeyboardSnapshot';
 
 let pre = createPre();
 let binaryPre = createPre();
@@ -8,7 +9,7 @@ let binaryPre = createPre();
 const gameLoop = new GameLoop(tick);
 gameLoop.run.call(gameLoop)
 
-function tick(frame: bigint) {
+function tick(frame: bigint, snapshot: KeyboardSnapshot) {
 	const {inputJson, keyboard, gamepads} = gameLoop;
 
 	inputJson.inputs = inputJson.inputs.map(collapsed)

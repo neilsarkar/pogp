@@ -1,5 +1,6 @@
-import {GameLoop} from './GameLoop.js';
-import {Key} from './enums.js';
+import {GameLoop} from './GameLoop';
+import {Key} from './enums';
+import { KeyboardSnapshot } from './KeyboardSnapshot';
 
 const leftPaddle = {
 	x: -100,
@@ -14,47 +15,34 @@ const rightPaddle = {
 const gameLoop = new GameLoop(tick);
 gameLoop.run();
 
-function tick(frame: bigint) {
-	const {keyboard} = gameLoop;
-
-	console.log(keyboard);
-
-	// left arrow
-	if (keyboard[Key.ArrowLeft]) {
+function tick(frame: bigint, keyboard: KeyboardSnapshot ) {
+	if (keyboard.isKey(Key.ArrowLeft)) {
 		leftPaddle.x--;
 	}
-	// up arrow
-	if (keyboard[38]) {
-		leftPaddle.y--;
-	}
-	// right arrow
-	if (keyboard[39]) {
+	if (keyboard.isKey(Key.ArrowRight)) {
 		leftPaddle.x++;
 	}
-	// down arrow
-	if (keyboard[40]) {
+	if (keyboard.isKey(Key.ArrowUp)) {
+		leftPaddle.y--;
+	}
+	if (keyboard.isKey(Key.ArrowDown)) {
 		leftPaddle.y++;
 	}
 
-	// a
-	if (keyboard[65]) {
+	if (keyboard.isKey(Key.KeyA)) {
+		rightPaddle.x--;
+	}
+	if (keyboard.isKey(Key.KeyD)) {
 		rightPaddle.x++;
 	}
-	// w
-	if (keyboard[87]) {
+	if (keyboard.isKey(Key.KeyW)) {
 		rightPaddle.y--;
 	}
-	// d
-	if (keyboard[68]) {
-		rightPaddle.x++;
-	}
-	// s
-	if (keyboard[83]) {
+	if (keyboard.isKey(Key.KeyS)) {
 		rightPaddle.y++;
 	}
 
 	if (frame % 60n == 0n) {
 		console.log(leftPaddle, rightPaddle);
 	}
-
 }
