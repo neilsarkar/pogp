@@ -1,20 +1,42 @@
 export class BinaryReader {
-	buffer: Uint8Array;
 	offset: number;
 	bitOffset: number;
+	dataView: DataView;
 
 	constructor(buffer: Uint8Array) {
-		this.buffer = buffer || new Uint8Array(length);
 		this.offset = 0;
 		this.bitOffset = 0;
+		this.dataView = new DataView(buffer.buffer, buffer.byteOffset, buffer.byteLength);
 	}
 
 	readBool() : boolean {
-		const ret = !!(this.buffer[this.offset] & 1 << this.bitOffset++);
+		const ret = !!(this.dataView.getUint8(this.offset) & 1 << this.bitOffset++);
 		if (this.bitOffset == 8) {
 			this.bitOffset = 0;
 			this.offset++;
 		}
+		return ret;
+	}
+
+	readUint8() : number {
+		return this.dataView.getUint8(this.offset++)
+	}
+
+	readUint16() : number {
+		const ret = this.dataView.getUint16(this.offset, true);
+		this.offset += 2;
+		return ret;
+	}
+
+	readUint32() : number {
+		const ret = this.dataView.getUint32(this.offset, true);
+		this.offset += 4;
+		return ret;
+	}
+
+	readInt64() : bigint {
+		const ret = this.dataView.getBigInt64(this.offset, true);
+		this.offset += 8;
 		return ret;
 	}
 }

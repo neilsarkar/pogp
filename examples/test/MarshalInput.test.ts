@@ -1,7 +1,8 @@
-import {MarshalInput} from '../dist/MarshalInput.js';
-import {toHexString} from '../dist/lib.js';
-import {InputType, ButtonPosition, Hand} from '../dist/enums.js';
+import {MarshalInput} from '../src/MarshalInput';
+import {toBinaryString, toHexString} from '../src/lib';
+import {InputType, ButtonPosition, Hand} from '../src/enums';
 import assert from 'assert';
+import { Pog } from '../src/types';
 
 describe('MarshalInput', function() {
 	describe('.encodeGamepad', function() {
@@ -47,27 +48,31 @@ describe('MarshalInput', function() {
 	})
 
 	describe('.decodeGamepad', function() {
-		const table = [
+		const table : Pog.GamepadInput[] = [
 			{
+				type: InputType.Gamepad,
 				id: 'null axes and buttons',
 				axes: null,
 				buttons: null
 			},
 			{
+				type: InputType.Gamepad,
 				id: 'one button',
 				axes: null,
 				buttons: [
-					{ position: ButtonPosition.Middle, label: 'nice', value: 9500 },
+					{ position: ButtonPosition.Middle, value: 9500 },
 				]
 			},
 			{
+				type: InputType.Gamepad,
 				id: 'one axis',
 				axes: [
 					{
-						hand: Hand.left,
+						hand: Hand.Left,
 						value: [50n, 50n]
 					}
-				]
+				],
+				buttons: null,
 			},
 		]
 
@@ -76,7 +81,13 @@ describe('MarshalInput', function() {
 				const buffer = MarshalInput.encodeGamepad(input);
 				const decodedInput = MarshalInput.decodeGamepad(buffer);
 
-				assert.deepStrictEqual(decodedInput, input);
+				if (input.buttons === null) { input.buttons = []; }
+				if (input.axes === null) { input.axes = []; }
+
+				expect(decodedInput.type).toEqual(input.type);
+
+				expect(decodedInput.buttons).toEqual(input.buttons);
+				expect(decodedInput.axes).toEqual(input.axes);
 			})
 		})
 	})

@@ -1,24 +1,24 @@
-import {BinaryWriter} from '../dist/BinaryWriter.js';
+import {BinaryWriter} from '../src/BinaryWriter';
 import assert from 'assert';
 
 describe('BinaryWriter', () => {
 	describe('writeBool', function() {
-		let table = [
+		let table: [boolean[], number, number?][] = [
 			[[true], 1],
 			[[true, true], 3],
 			[[true, false, true], 5],
 			[[true, true, true, true, true, true, true, true], 255],
-			[[false, false, false, false, false, false, false, false, true], 1, 1]
+			[[false, false, false, false, false, false, false, false, true], 1, 1],
 		];
 
-		table.forEach(([values, expectedDecimal, byteIndex]) => {
+		table.forEach(([bools, base10, byteIndex]) => {
 			byteIndex = byteIndex || 0;
-			it(`should write ${values.join(',')} as ${expectedDecimal} at byte ${byteIndex}`, () => {
+			it(`should write ${bools.join(',')} as ${base10} at byte ${byteIndex}`, () => {
 				const writer = new BinaryWriter(null, 2);
-				values.forEach((binaryValue) => {
+				bools.forEach((binaryValue) => {
 					writer.writeBool(binaryValue);
 				})
-				assert.equal(writer.buffer[byteIndex], expectedDecimal)
+				assert.equal(writer.buffer[byteIndex], base10)
 			})
 		})
 
@@ -60,11 +60,11 @@ describe('BinaryWriter', () => {
 	})
 
 	describe('writeUInt16', function() {
-		let table = [
+		let table : [number, string][] = [
 			[1, '0x0001'],
 			[255, '0x00ff'],
 			[256, '0x0100'],
-			[500, '0x01f4']
+			[500, '0x01f4'],
 		]
 		table.forEach(([short, hex]) => {
 			it(`should write ${short} as ${hex}`, () => {
@@ -139,6 +139,6 @@ describe('BinaryWriter', () => {
 	})
 
 	describe('writeString', function() {
-		it('will be able to write a string')
+		it.todo('will be able to write a string')
 	})
 })
