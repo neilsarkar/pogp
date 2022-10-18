@@ -12,11 +12,11 @@
       background-color: black;
       width: 100vw;
       height: 100vh;
+      position: absolute; left: 0; right: 0; top: 0; bottom: 0;
+      margin: auto;
     }
 
     .paddle {
-      width: 5vw;
-      height: 10vh;
       background-color: hotpink;
       position: absolute;
     }
@@ -24,6 +24,11 @@
     .paddle.right {
       background-color: cornflowerblue;
       transform: translate(20,20);
+    }
+
+    .ball {
+      background-color: rebeccapurple;
+      position: absolute;
     }
   </style>
 </head>
@@ -33,6 +38,7 @@
   <div class="board">
     <div class="left paddle"></div>
     <div class="right paddle"></div>
+    <div class="ball"></div>
   </div>
 </body>
 </html>

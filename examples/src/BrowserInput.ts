@@ -43,11 +43,21 @@ function readGamepad(gamepad: Gamepad) : Pog.GamepadInput {
 	switch(gamepad.id) {
 		case 'Stadia Controller rev. A (STANDARD GAMEPAD Vendor: 18d1 Product: 9400)':
 			return stadiaController(gamepad);
+		default:
+			return genericController(gamepad);
 	}
 }
 
 
 function stadiaController(gamepad: Gamepad) : Pog.GamepadInput {
+	return {
+		...genericController(gamepad),
+		productId: '9400',
+		vendorId: '18d1'
+	}
+}
+
+function genericController(gamepad: Gamepad) : Pog.GamepadInput {
 	const defaultAxesMapping = [
 		{
 			hand: Hand.Left,
@@ -86,8 +96,6 @@ function stadiaController(gamepad: Gamepad) : Pog.GamepadInput {
 	return {
 		id: gamepad.id,
 		type: InputType.Gamepad,
-		productId: '9400',
-		vendorId: '18d1',
 		axes: defaultAxesMapping.map((mapping) => ({
 			...mapping,
 			value: [
