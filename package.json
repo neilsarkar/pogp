@@ -6,13 +6,14 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "yarn wasmwatch & vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "parceldev": "parcel index.html",
     "parceldemo": "parcel input.html",
     "test": "jest",
-    "wasmpack": "wasm-pack build"
+    "wasmpack": "wasm-pack build",
+    "wasmwatch": "cargo watch -w src/*.rs -s \"wasm-pack build\""
   },
   "devDependencies": {
     "@types/jest": "^29.1.2",
