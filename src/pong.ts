@@ -5,6 +5,9 @@ import { MarshalInput } from './MarshalInput';
 import { GamepadSnapshot } from './GamepadSnapshot';
 import {clamp} from './lib';
 import { Pog } from './types';
+import {add, subtract } from '../pkg/hellowasm_bg.wasm'
+
+console.log('nice', add(1,1), subtract(400, 100));
 
 type GameState = {
 	leftPaddle: BoundingBox,
