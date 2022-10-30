@@ -5,9 +5,18 @@ import { MarshalInput } from './MarshalInput';
 import { GamepadSnapshot } from './GamepadSnapshot';
 import {clamp} from './lib';
 import { Pog } from './types';
-import {add, subtract, multiply, divide} from '../pkg/hellowasm_bg.wasm'
+import {Hello} from '../pkg/hellowasm';
+// https://github.com/rustwasm/wasm-bindgen/issues/2456
+import {memory} from '../pkg/hellowasm_bg.wasm'
 
-console.log('nice', add(1,1), subtract(400, 100), multiply(100,100), divide(20,10));
+let uni = Hello.new();
+const ptr = uni.cells();
+const bytes = new Uint8Array(memory.buffer, ptr, 10);
+bytes[0] = 66;
+uni.double();
+for(let i = 0; i < 10; i++) {
+	console.log(bytes[i]);
+}
 
 type GameState = {
 	leftPaddle: BoundingBox,
