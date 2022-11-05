@@ -4,7 +4,7 @@ Game development is hard. It shouldn't be.
 
 Making games should feel like playing games.
 
-* People should be able to use the languages and tools they're already familiar with.
+* People should be able to use languages and tools they're already familiar with.
 
 * Developer experience should prioritize immersion in a flow state.
 
@@ -12,7 +12,7 @@ Making games should feel like playing games.
 
 ## Introducing the POG Protocol
 
-The POG Protocol defines language-agnostic binary and json representations of [Inputs](#inputs) and [State](#state).
+The POG Protocol defines language-neutral binary and json representations of [Inputs](#inputs) and [State](#state).
 
 This allows us to implement the classic game loop as three independent pieces, each written in any language, framework or engine:
 ```
@@ -28,6 +28,8 @@ while(true) {
 https://pogp.games/examples/input
 
 https://pogp.games/examples/state
+
+https://pogp.games/examples/pong
 
 ## Inputs
 

@@ -4,8 +4,8 @@ pub mod inputs;
 
 // https://rustwasm.github.io/docs/book/game-of-life/implementing.html
 #[wasm_bindgen]
-pub struct Hello {
-    cells: Vec<u8>,
+pub struct Inputs {
+    buffer: Vec<u8>,
 }
 
 #[wasm_bindgen]
@@ -17,22 +17,22 @@ pub enum Cell {
 }
 
 #[wasm_bindgen]
-impl Hello {
-    pub fn new() -> Hello {
-        let cells = (0..10).collect();
+impl Inputs {
+    pub fn new() -> Inputs {
+        let buffer = (0..10).collect();
 
-        Hello { cells }
+        Inputs { buffer }
     }
 
-    pub fn double(&mut self) {
-        let mut i = 0;
-        while i < 10 {
-            self.cells[i] = self.cells[i] * 2;
-            i = i + 1;
+    pub fn tick(&mut self) {
+        if self.buffer[0] == 1 {
+            self.buffer[1] = 66;
+        } else {
+            self.buffer[1] = 0;
         }
     }
 
-    pub fn cells(&self) -> *const u8 {
-        return self.cells.as_ptr();
+    pub fn input_buffer(&self) -> *const u8 {
+        return self.buffer.as_ptr();
     }
 }
