@@ -1,5 +1,5 @@
-import { InputType, Key } from "../src/enums";
-import { KeyboardSnapshot } from "../src/KeyboardSnapshot"
+import { InputType, Key } from "../../src/ts/enums";
+import { KeyboardSnapshot } from "../../src/ts/KeyboardSnapshot"
 
 describe('KeyboardSnapshot', function() {
 	describe('.isKeyDown', function() {

@@ -1,5 +1,5 @@
-import {BinaryReader} from '../src/BinaryReader';
-import {BinaryWriter} from '../src/BinaryWriter';
+import {BinaryReader} from '../../src/ts/BinaryReader';
+import {BinaryWriter} from '../../src/ts/BinaryWriter';
 import assert from 'assert';
 
 describe('BinaryReader', function() {

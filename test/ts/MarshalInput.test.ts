@@ -1,8 +1,8 @@
-import {MarshalInput, MAX_AXES, MAX_BUTTONS} from '../src/MarshalInput';
-import {toBinaryString, toHexString} from '../src/lib';
-import {InputType, ButtonPosition, Hand, Key} from '../src/enums';
+import {MarshalInput, MAX_AXES, MAX_BUTTONS} from '../../src/ts/MarshalInput';
+import {toBinaryString, toHexString} from '../../src/ts/lib';
+import {InputType, ButtonPosition, Hand, Key} from '../../src/ts/enums';
+import { Pog } from '../../src/ts/types';
 import assert from 'assert';
-import { Pog } from '../src/types';
 
 describe('MarshalInput', function() {
 	describe('.encodeGamepad', function() {

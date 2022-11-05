@@ -1,4 +1,4 @@
-import {BinaryWriter} from '../src/BinaryWriter';
+import {BinaryWriter} from '../../src/ts/BinaryWriter';
 import assert from 'assert';
 
 describe('BinaryWriter', () => {

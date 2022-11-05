@@ -1,5 +1,5 @@
 {
-  "name": "pogp-examples",
+  "name": "pogp",
   "version": "1.0.0",
   "main": "index.js",
   "author": "Neil Sarkar",
@@ -13,7 +13,7 @@
     "parceldemo": "parcel input.html",
     "test": "jest",
     "wasmpack": "wasm-pack build",
-    "wasmwatch": "cargo watch -w src/*.rs -s \"wasm-pack build\""
+    "wasmwatch": "cargo watch -w src/rs/*.rs -s \"wasm-pack build\""
   },
   "devDependencies": {
     "@types/jest": "^29.1.2",

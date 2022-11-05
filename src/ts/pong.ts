@@ -5,9 +5,9 @@ import { MarshalInput } from './MarshalInput';
 import { GamepadSnapshot } from './GamepadSnapshot';
 import {clamp} from './lib';
 import { Pog } from './types';
-import {Hello} from '../pkg/hellowasm';
+import {Hello} from '../../pkg/hellowasm';
 // https://github.com/rustwasm/wasm-bindgen/issues/2456
-import {memory} from '../pkg/hellowasm_bg.wasm'
+import {memory} from '../../pkg/hellowasm_bg.wasm'
 
 let uni = Hello.new();
 const ptr = uni.cells();
