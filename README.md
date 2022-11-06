@@ -95,10 +95,13 @@ Why would it be useful to write these pieces in different languages or run them 
 
 Surely most devs / teams would prefer to write everything in one language and one framework (e.g. c++ with unreal, c# with unity, javascript with phaser, rust with bevy).
 
-## Interactive Examples
+In practice, any given team will likely stick to the language(s) and framework(s) they're currently using. But the shared input and state representations will allow for greater portability and sharing of solutions.
 
-https://pogp.gg/examples/pong
+Also the separation of logic and rendering will enable teams to scale their development better as the project size grows without having to embark on a costly rewrite when already behind schedule and over budget.
 
+## Interactive Examples (WIP)
+
+https://pogp.gg/examples/pong (WIP)
 
 # Reference
 
