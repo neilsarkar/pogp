@@ -93,15 +93,15 @@ function logic(keyboard: KeyboardSnapshot, gamepad: GamepadSnapshot) {
 		state.ball.v.x = Math.abs(state.ball.v.x);
 		state.ball.x = Math.max(state.leftPaddle.x + state.ball.w, state.ball.x);
 		state.ball.v.y =
-			state.ball.y < state.leftPaddle.y + state.leftPaddle.h / 3 ? -speed :
-			state.ball.y > state.leftPaddle.y + 2 * state.leftPaddle.h / 3 ? speed :
+			state.ball.y + state.ball.h / 2 < state.leftPaddle.y + state.leftPaddle.h / 3 ? -speed :
+			state.ball.y + state.ball.h / 2 > state.leftPaddle.y + 2 * state.leftPaddle.h / 3 ? speed :
 			0;
 	} else if (isColliding(state.ball, state.rightPaddle)) {
 		state.ball.v.x = -Math.abs(state.ball.v.x);
 		state.ball.x = Math.min(state.rightPaddle.x - state.ball.w, state.ball.x);
 		state.ball.v.y =
-			state.ball.y < state.rightPaddle.y + state.rightPaddle.h / 3 ? -speed :
-			state.ball.y > state.rightPaddle.y + 2 * state.rightPaddle.h / 3 ? speed :
+			state.ball.y + state.ball.h / 2 < state.rightPaddle.y + state.rightPaddle.h / 3 ? -speed :
+			state.ball.y + state.ball.h / 2 > state.rightPaddle.y + 2 * state.rightPaddle.h / 3 ? speed :
 			0;
 	}
 
