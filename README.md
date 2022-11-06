@@ -1,43 +1,112 @@
-# Portable Open Game Protocol 0.1.1
+# Portable Open Game Protocol 0.0.3
 
-Game development is hard. It shouldn't be.
+Making games is hard. It shouldn't have to be.
 
 Making games should feel like playing games.
 
-* People should be able to use languages and tools they're already familiar with.
-
-* Developer experience should prioritize immersion in a flow state.
-
-* Low level problems should have shared solutions.
-
-## Introducing the POG Protocol
+## Introducing the POG protocol
 
 The POG Protocol defines language-neutral binary and json representations of [Inputs](#inputs) and [State](#state).
 
-This allows us to implement the classic game loop as three independent pieces, each written in any language, framework or engine:
-```
-while(true) {
-	inputs = readInputs();
-	state = runLogic(inputs, state);
-	render(state);
-}
-```
+### **Portable**
+
+* prototype and playtest game logic in rust, c++, c# or typescript in the browser
+
+* compile the same game logic code for unreal, unity, bevy, godot etc
+
+* support online multiplayer by running the same game logic code on a server or exchanging binary inputs or state peer to peer
+
+### **Open**
+
+* input representations are based on web standards
+
+* state representations use open standards (WIP)
+
+* games that adopt the protocol can utilize shared solutions for common functionality
+
+### **Game**
+
+* immersion during the development process is sacrosanct. making games feels like playing games
+
+* all the tools you use to build for mobile and console targets can be used with your pogp-compliant binary (WIP)
+
+* memory management is baked in to the design of the protocol
+
+## Goals
+
+The goal of the POG protocol is to help create better games for players, to allow indie devs to effectively compete with AAA, and to reduce crunch globally.
+
+If this sounds ambitious, just look at the development ecosystem for web and app developers.
+
+Industry-wide adoption of the HTTP protocol and open source technologies like Linux leveled the playing field for web and app developers.
+
+Shared solutions and common development environments saved everyone countless years of time-to-market and ushered in an era of innovation and enlightenment in developer experience.
+
+I believe that in many ways, game development is still in the dark ages.
+
+Why does it take most teams 3-4 years to get a game to market?
+
+Yes, crafting compelling experiences takes time and is hard. But the average hollywood movie takes 2 years to create.
+
+Yes, writing software takes time and is hard. But the average tech startup releases a first product in the first 6-12 months of development.
+
+I believe that technical debt is the silent killer across our industry.
+
+I believe that a lack of shared solutions is creating a barrier to entry for making games that excludes many voices.
+
+I believe it's inhumane for us to subject ourselves to 30 second immersion-breaking compilation times every day for years of development.
+
+I love games, and I hope that there can be a better world for developers and players of games.
+
+## Project Status
+
+The Pog Protocol is in a pre-alpha state. The protocol itself is still being written, and client libraries do not yet exist beyond the demos in this repo.
+
+For this to work for devs, we'll need domain experts contributing to client libraries for each major game engine and runtime environment.
+
+If you are interested in contributing or adding an environment to the list, please open a github issue or drop me a line on discord `nu11#1111` or neil at nullent.com
+
+__Game Logic Client Libraries__
+
+language | dev environment | inputs | state | wasm support
+-|-|-|-|-
+`c#` | unity | OPEN | OPEN | OPEN
+`c++` | unreal | OPEN | OPEN | OPEN
+`rust` | bevy | OPEN | OPEN | OPEN
+`c#` | browser | OPEN | OPEN | OPEN
+`c++` | browser | OPEN | OPEN | OPEN
+`rust` | browser | @ns | @ns | @ns
+`typescript` | browser | @ns | @ns | @ns
+
+__Rendering Client Libraries__
+
+language | framework | environment | status
+-|-|-|-
+`c#` | unity | pc/mac/mobile/console | OPEN
+`c++` | unreal | pc/mac/mobile/console | OPEN
+`rust` | bevy | pc/mac | OPEN
+`swift` | xcode/autolayout | ios | OPEN
+`typescript` | pixi.js | browser | @ns
+
+
+## Why
+
+Why would it be useful to write these pieces in different languages or run them in different engines?
+
+Surely most devs / teams would prefer to write everything in one language and one framework (e.g. c++ with unreal, c# with unity, javascript with phaser, rust with bevy).
 
 ## Interactive Examples
 
-https://pogp.games/examples/input
+https://pogp.gg/examples/pong
 
-https://pogp.games/examples/state
 
-https://pogp.games/examples/pong
+# Reference
 
 ## Inputs
 
 Inputs contain the state of the input at the current frame.
 
 Whenever possible, representations are based on open standards.
-
-Interactive example: https://pogp.games/examples/input
 
 [Gamepad (a.k.a. Controller) Input](#gamepad-input)
 
@@ -192,7 +261,7 @@ data | example | type | index | length (bytes)
 `x` | 100000 | `int64` | 1 | 64
 `y` | 100000 | `int64` | 65 | 64
 
-### **Touch Input**
+### **Touch Input (WIP)**
 
 ```js
 {
@@ -208,7 +277,7 @@ data | example | type | index | length (bytes)
 }
 ```
 
-### **Mouse Input**
+### **Mouse Input (WIP)**
 
 ```js
 {
@@ -234,48 +303,7 @@ data | example | type | index | length (bytes)
 }
 ```
 
-### **Keyboard Input**
-
-Keyboard keys are represented using the w3 standard, supporting standard 101, Korean, Brazilian and Japanese keyboards.
-
-https://www.toptal.com/developers/keycode
-
-https://www.w3.org/TR/uievents-code/#keyboard-mac
-
-
-```js
-{
-	type: "keyboard",
-	keys: [
-		27,
-		65
-	]
-}
-```
-
-data | type | byte index | bit index
--|-|-|-
-`Null` | `bool` | 0 | 0
-`ArrowDown` | `bool` | 0 | 1
-`ArrowLeft` | `bool` | 0 | 2
-`ArrowRight` | `bool` | 0 | 3
-`ArrowUp` | `bool` | 0 | 4
-`Backspace` | `bool` | 0 | 5
-`Tab` | `bool` | 0 | 6
-`CapsLock` | `bool` | 0 | 7
-`Enter` | `bool` | 1 | 0
-`ShiftLeft` | `bool` | 1 | 1
-`ShiftRight` | `bool` | 1 | 2
-`ControlLeft` | `bool` | 1 | 3
-`MetaLeft` | `bool` | 1 | 4
-`AltLeft` | `bool` | 1 | 5
-`Space` | `bool` | 1 | 6
-`AltRight` | `bool` | 1 | 7
-`MetaRight` | `bool` | 2 | 0
-... | `bool` | ... | ...
-`IntlRo` | `bool` | 9 | 4
-
-**Custom**
+**Custom (WIP)**
 
 ```js
 {
@@ -294,7 +322,7 @@ data | type | byte index | bit index
 }
 ```
 
-## State
+## State (WIP)
 
 Game state represents the state of the game. This is going to be custom for each game.
 
