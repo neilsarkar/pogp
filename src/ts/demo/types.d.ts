@@ -1,11 +1,14 @@
 import {Pog} from '../types'
 
 export type GameState = {
-	leftPaddle: BoundingBox,
-	rightPaddle: BoundingBox,
-	score: number[],
+	p0: Paddle,
+	p1: Paddle,
+	p0_score: number,
+	p1_score: number,
 	ball: Ball
 }
+
+export type Paddle = BoundingBox;
 
 export type Ball = BoundingBox & {
 	v: {

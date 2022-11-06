@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-32">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>POG Protocol Input Example</title>
+  <title>POG Protocol Pong Example</title>
 
   <style>
     body { margin: 0; padding: 0; }
@@ -20,22 +20,31 @@
       background-color: hotpink;
       position: absolute;
     }
-
     .paddle.right {
       background-color: cornflowerblue;
-      transform: translate(20,20);
     }
-
     .ball {
       background-color: rebeccapurple;
       position: absolute;
     }
+
+    .scores {
+      font-family: 'Comic Sans MS', 'OpenSans', sans-serif;
+      color: white;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
-  <script type="module" src="src/ts/pong.ts"></script>
+  <script type="module" src="src/ts/demo/pongDemo.ts"></script>
 
   <div class="board">
+    <button>Change Runtime</button>
+    <div class="scores">
+      <span class="left score">0</span>
+      -
+      <span class="right score">0</span>
+    </div>
     <div class="left paddle"></div>
     <div class="right paddle"></div>
     <div class="ball"></div>

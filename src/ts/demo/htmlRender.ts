@@ -1,10 +1,5 @@
-import {GameLoop} from './GameLoop';
-
-import {Game, GameState} from '../../pkg/pogp';
-// https://github.com/rustwasm/wasm-bindgen/issues/2456
-import {memory} from '../../pkg/pogp_bg.wasm'
-
-let rustGame = Game.new();
+import {GameState as TsGameState} from './types';
+import {GameState as RustGameState} from '../../../pkg/pogp';
 
 const p0div = document.querySelector('.left.paddle') as HTMLDivElement;
 const p1div = document.querySelector('.right.paddle') as HTMLDivElement;
@@ -12,23 +7,7 @@ const balldiv = document.querySelector('.ball') as HTMLDivElement;
 const p0score = document.querySelector('.left.score') as HTMLSpanElement;
 const p1score = document.querySelector('.right.score') as HTMLSpanElement;
 
-const gameLoop = new GameLoop(tick);
-gameLoop.run();
-
-function tick(frame: bigint, inputs: ArrayBuffer) {
-	const ptr = rustGame.input_buffer();
-	const bytes = new Uint8Array(memory.buffer, ptr, 10);
-
-	let i = 0;
-	var byteArray = new Uint8Array(inputs);
-	for(var byte of byteArray) {
-		bytes[i++] = byte;
-	}
-	rustGame.tick(frame);
-	render(rustGame.state);
-}
-
-function render(state: GameState) {
+export function render(state: TsGameState | RustGameState) {
 	const {p0, p1, ball} = state;
 
 	const p0Point = worldToScreen(p0.x, p0.y);

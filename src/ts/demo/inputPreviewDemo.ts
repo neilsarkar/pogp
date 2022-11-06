@@ -1,9 +1,9 @@
-import {toBinaryString} from './lib';
-import type { Pog } from './types';
-import { GameLoop } from './GameLoop';
-import { KeyboardSnapshot } from './KeyboardSnapshot';
-import { GamepadSnapshot } from './GamepadSnapshot';
-import { KEYBOARD_LENGTH, MarshalInput } from './MarshalInput';
+import {toBinaryString} from '../lib';
+import type { Pog } from '../types';
+import { GameLoop } from '../GameLoop';
+import { KeyboardSnapshot } from '../KeyboardSnapshot';
+import { GamepadSnapshot } from '../GamepadSnapshot';
+import { KEYBOARD_LENGTH, MarshalInput } from '../MarshalInput';
 
 let pre = createPre();
 let binaryPre = createPre();

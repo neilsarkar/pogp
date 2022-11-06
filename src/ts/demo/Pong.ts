@@ -14,10 +14,11 @@ export class Pong {
 
 	constructor() {
 		this.state = {
-			leftPaddle: { x: 0, y: 0, w: 0, h: 0 },
-			rightPaddle: { x: 0, y: 0, w: 0, h: 0 },
+			p0: { x: 0, y: 0, w: 0, h: 0 },
+			p1: { x: 0, y: 0, w: 0, h: 0 },
 			ball: { x: 0, y: 0, w: 0, h: 0, v: {x: 0, y: 0}},
-			score: [0,0]
+			p0_score: 0,
+			p1_score: 0
 		}
 
 		this.keyboard = new KeyboardSnapshot();
@@ -38,10 +39,10 @@ export class Pong {
 
 		// check win state
 		if (this.state.ball.x < 0) {
-			this.state.score[1]++;
+			this.state.p1_score++;
 			this.reset();
 		} else if (this.state.ball.x > 100 - this.state.ball.w) {
-			this.state.score[0]++;
+			this.state.p0_score++;
 			this.reset();
 		}
 	}
@@ -55,48 +56,48 @@ export class Pong {
 
 		// p0 moves with up and down arrows
 		if (this.keyboard.isKey(Key.ArrowUp)) {
-			this.state.leftPaddle.y--;
+			this.state.p0.y--;
 		}
 		if (this.keyboard.isKey(Key.ArrowDown)) {
-			this.state.leftPaddle.y++;
+			this.state.p0.y++;
 		}
 
 		// p1 moves with W and S of wasd
 		if (this.keyboard.isKey(Key.KeyW)) {
-			this.state.rightPaddle.y--;
+			this.state.p1.y--;
 		}
 		if (this.keyboard.isKey(Key.KeyS)) {
-			this.state.rightPaddle.y++;
+			this.state.p1.y++;
 		}
 
 		// p1 can also move with a gamepad connected to the browser
 		const axes = this.gamepad.getAxes(Hand.Left);
 		if (axes) {
-			this.state.rightPaddle.x += Number(axes.value[0]) / 10000;
-			this.state.rightPaddle.y += Number(axes.value[1]) / 10000;
+			this.state.p1.x += Number(axes.value[0]) / 10000;
+			this.state.p1.y += Number(axes.value[1]) / 10000;
 		}
 	}
 
 	processCollisions() {
-		processCollision(this.state.ball, this.state.leftPaddle);
-		processCollision(this.state.ball, this.state.rightPaddle);
+		processCollision(this.state.ball, this.state.p0);
+		processCollision(this.state.ball, this.state.p1);
 
 		if (this.state.ball.y < 0 || this.state.ball.y > 100 - this.state.ball.h) {
 			this.state.ball.v.y *= -1;
 		}
 
-		this.state.leftPaddle.y = clamp(this.state.leftPaddle.y, 0, 100 - this.state.leftPaddle.h);
-		this.state.rightPaddle.y = clamp(this.state.rightPaddle.y, 0, 100 - this.state.rightPaddle.h);
+		this.state.p0.y = clamp(this.state.p0.y, 0, 100 - this.state.p0.h);
+		this.state.p1.y = clamp(this.state.p1.y, 0, 100 - this.state.p1.h);
 	}
 
 	reset() {
-		this.state.leftPaddle = {
+		this.state.p0 = {
 			x: 0,
 			y: 50 - 7.5,
 			w: 3,
 			h: 15
 		},
-		this.state.rightPaddle = {
+		this.state.p1 = {
 			x: 100 - 3,
 			y: 50 - 7.5,
 			w: 3,

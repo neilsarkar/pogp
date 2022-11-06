@@ -101,20 +101,20 @@ impl Game {
     // for clarity in this toy example, positions are represented as floats
     // (0,0) is top left corner, (100, 100) is bottom right
     fn reset(&mut self) {
-        self.state.p0.x = 0.0;
-        self.state.p0.y = 50.0 - 7.0;
         self.state.p0.w = 3.0;
         self.state.p0.h = 15.0;
+        self.state.p0.x = 0.0;
+        self.state.p0.y = 50.0 - self.state.p0.h / 2.0;
 
-        self.state.p1.x = 100.0 - 3.0;
-        self.state.p1.y = 50.0 - 7.0;
         self.state.p1.w = 3.0;
         self.state.p1.h = 15.0;
+        self.state.p1.x = 100.0 - self.state.p1.w;
+        self.state.p1.y = 50.0 - self.state.p1.h / 2.0;
 
-        self.state.ball.x = 50.0 - 3.0;
-        self.state.ball.y = 50.0 - 3.0;
         self.state.ball.w = 3.0;
         self.state.ball.h = 3.0;
+        self.state.ball.x = 50.0 - self.state.ball.w / 2.0;
+        self.state.ball.y = 50.0 - self.state.ball.h / 2.0;
         self.state.ball.v = Vector2 {
             x: self.config.ball_speed,
             y: 0.0,
@@ -136,10 +136,10 @@ impl Ball {
         self.v.x = -self.v.x;
 
         // if we hit the top third of the paddle, send ball at a 45 degree angle up
-        self.v.y = if (self.y + self.h / 2) < paddle.y + paddle.h / 3.0 {
+        self.v.y = if (self.y + self.h / 2.0) < paddle.y + paddle.h / 3.0 {
             -speed
         // if we hit the bottom third of the paddle, send ball at a 45 degree angle down
-        } else if (self.y + self.h / 2) > paddle.y + 2.0 * paddle.h / 3.0 {
+        } else if (self.y + self.h / 2.0) > paddle.y + 2.0 * paddle.h / 3.0 {
             speed
         // if we hit the middle of the paddle, send ball directly across
         } else {
