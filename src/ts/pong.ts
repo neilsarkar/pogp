@@ -5,25 +5,9 @@ import { MarshalInput } from './MarshalInput';
 import { GamepadSnapshot } from './GamepadSnapshot';
 import {clamp} from './lib';
 import { Pog } from './types';
+import {GameState, BoundingBox, Ball} from './demo/types';
+import {Pong} from './demo/Pong';
 
-type GameState = {
-	leftPaddle: BoundingBox,
-	rightPaddle: BoundingBox,
-	score: number[],
-	ball: Ball
-}
-
-type Ball = BoundingBox & {
-	v: {
-		x: number,
-		y: number
-	}
-}
-
-type BoundingBox = Pog.Point & {
-	w: number,
-	h: number
-}
 
 let state: GameState = {
 	leftPaddle: { x: 0, y: 0, w: 0, h: 0 },
@@ -41,19 +25,14 @@ const p0div = document.querySelector('.left.paddle') as HTMLDivElement;
 const p1div = document.querySelector('.right.paddle') as HTMLDivElement;
 const balldiv = document.querySelector('.ball') as HTMLDivElement;
 
-reset();
+const pong = new Pong();
+
 const gameLoop = new GameLoop(tick);
 gameLoop.run();
 
 function tick(frame: bigint, inputs: ArrayBuffer) {
-	const kbInput = MarshalInput.decodeKeyboard(inputs);
-	keyboard.addInput(kbInput);
-
-	const gamepadInput = MarshalInput.decodeGamepad(inputs);
-	gamepad.addInput(gamepadInput);
-
-	logic(keyboard, gamepad);
-	render(state);
+	pong.tick(frame, inputs);
+	render(pong.state);
 }
 
 function logic(keyboard: KeyboardSnapshot, gamepad: GamepadSnapshot) {
