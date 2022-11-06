@@ -264,6 +264,47 @@ data | example | type | index | length (bytes)
 `x` | 100000 | `int64` | 1 | 64
 `y` | 100000 | `int64` | 65 | 64
 
+### **Keyboard Input**
+
+Keyboard keys are represented using the w3 standard, supporting standard 101, Korean, Brazilian and Japanese keyboards.
+
+https://www.toptal.com/developers/keycode
+
+https://www.w3.org/TR/uievents-code/#keyboard-mac
+
+
+```js
+{
+       type: "keyboard",
+       keys: [
+               27,
+               65
+       ]
+}
+```
+
+data | type | byte index | bit index
+-|-|-|-
+`Null` | `bool` | 0 | 0
+`ArrowDown` | `bool` | 0 | 1
+`ArrowLeft` | `bool` | 0 | 2
+`ArrowRight` | `bool` | 0 | 3
+`ArrowUp` | `bool` | 0 | 4
+`Backspace` | `bool` | 0 | 5
+`Tab` | `bool` | 0 | 6
+`CapsLock` | `bool` | 0 | 7
+`Enter` | `bool` | 1 | 0
+`ShiftLeft` | `bool` | 1 | 1
+`ShiftRight` | `bool` | 1 | 2
+`ControlLeft` | `bool` | 1 | 3
+`MetaLeft` | `bool` | 1 | 4
+`AltLeft` | `bool` | 1 | 5
+`Space` | `bool` | 1 | 6
+`AltRight` | `bool` | 1 | 7
+`MetaRight` | `bool` | 2 | 0
+... | `bool` | ... | ...
+`IntlRo` | `bool` | 9 | 4
+
 ### **Touch Input (WIP)**
 
 ```js
