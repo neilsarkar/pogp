@@ -31,13 +31,17 @@ impl KeyboardSnapshot {
         self.inputs[self.head()].is_key_down(key)
     }
 
+    pub fn is_key(&mut self, key: Key) -> bool {
+        self.is_key_pressed(key)
+    }
+
     pub fn is_key_up(&mut self, key: Key) -> bool {
         !self.inputs[self.head()].is_key_down(key)
             && self.inputs[self.last_frame()].is_key_down(key)
     }
 
     fn advance_index(&mut self) {
-        self.index = if self.index >= INPUT_BUFFER_LENGTH {
+        self.index = if self.index == INPUT_BUFFER_LENGTH - 1 {
             0
         } else {
             self.index + 1
@@ -64,6 +68,15 @@ impl KeyboardSnapshot {
 #[cfg(test)]
 mod keyboard_snapshot {
     use super::*;
+
+    #[test]
+    fn add_input() {
+        let mut snapshot = KeyboardSnapshot::new();
+
+        for _ in 0..40 {
+            snapshot.add_input(KeyboardInput::from(vec![Key::Enter]));
+        }
+    }
 
     #[test]
     fn is_key_down() {
@@ -114,6 +127,9 @@ mod keyboard_snapshot {
             "false on key up"
         );
     }
+
+    // #[test]
+    // fn is_key_pressed() {}
 
     #[test]
     fn is_key_up() {

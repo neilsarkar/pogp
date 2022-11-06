@@ -1,7 +1,5 @@
 #[repr(u8)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-// https://users.rust-lang.org/t/variant-is-never-constructed-in-enum/31995/2
-#[allow(dead_code)]
 pub enum Key {
     Null,
 
@@ -75,4 +73,84 @@ pub enum Key {
     Period,
     Slash,
     IntlRo,
+}
+
+// todo: generate this from a macro
+impl From<u8> for Key {
+    fn from(key: u8) -> Self {
+        match key {
+            1 => Key::ArrowDown,
+            2 => Key::ArrowLeft,
+            3 => Key::ArrowRight,
+            4 => Key::ArrowUp,
+
+            5 => Key::Backspace,
+            6 => Key::Tab,
+            7 => Key::CapsLock,
+            8 => Key::Enter,
+            9 => Key::ShiftLeft,
+            10 => Key::ShiftRight,
+            11 => Key::ControlLeft,
+            12 => Key::MetaLeft,
+            13 => Key::AltLeft,
+            14 => Key::Space,
+            15 => Key::AltRight,
+            16 => Key::MetaRight,
+            17 => Key::ContextMenu,
+            18 => Key::ControlRight,
+
+            19 => Key::Backquote,
+            20 => Key::Digit1,
+            21 => Key::Digit2,
+            22 => Key::Digit3,
+            23 => Key::Digit4,
+            24 => Key::Digit5,
+            25 => Key::Digit6,
+            26 => Key::Digit7,
+            27 => Key::Digit8,
+            28 => Key::Digit9,
+            29 => Key::Digit0,
+            30 => Key::Minus,
+            31 => Key::Equal,
+            32 => Key::IntlYen,
+            33 => Key::KeyQ,
+            34 => Key::KeyW,
+            35 => Key::KeyE,
+            36 => Key::KeyR,
+            37 => Key::KeyT,
+            38 => Key::KeyY,
+            39 => Key::KeyU,
+            40 => Key::KeyI,
+            41 => Key::KeyO,
+            42 => Key::KeyP,
+            43 => Key::BracketLeft,
+            44 => Key::BracketRight,
+            45 => Key::Backslash,
+            46 => Key::KeyA,
+            47 => Key::KeyS,
+            48 => Key::KeyD,
+            49 => Key::KeyF,
+            50 => Key::KeyG,
+            51 => Key::KeyH,
+            52 => Key::KeyJ,
+            53 => Key::KeyK,
+            54 => Key::KeyL,
+            55 => Key::Semicolon,
+            56 => Key::Quote,
+            57 => Key::IntlBackslash,
+            58 => Key::KeyZ,
+            59 => Key::KeyX,
+            60 => Key::KeyC,
+            61 => Key::KeyV,
+            62 => Key::KeyB,
+            63 => Key::KeyN,
+            64 => Key::KeyM,
+            65 => Key::Comma,
+            66 => Key::Period,
+            67 => Key::Slash,
+            68 => Key::IntlRo,
+
+            _ => Key::Null,
+        }
+    }
 }

@@ -4,8 +4,52 @@
   <meta charset="UTF-32">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>POG Protocol Input Example</title>
+
+  <style>
+    body { margin: 0; padding: 0; }
+
+    .board {
+      background-color: black;
+      width: 100vw;
+      height: 100vh;
+      position: absolute; left: 0; right: 0; top: 0; bottom: 0;
+      margin: auto;
+    }
+
+    .paddle {
+      background-color: hotpink;
+      position: absolute;
+    }
+
+    .paddle.right {
+      background-color: cornflowerblue;
+    }
+
+    .ball {
+      background-color: rebeccapurple;
+      position: absolute;
+    }
+
+    .scores {
+      font-family: 'Comic Sans MS', 'OpenSans', sans-serif;
+      color: white;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
   <script type="module" src="./src/ts/rust.ts"></script>
+
+  <div class="board">
+    <div class="scores">
+      <span class="left score">0</span>
+      -
+      <span class="right score">0</span>
+    </div>
+
+    <div class="left paddle"></div>
+    <div class="right paddle"></div>
+    <div class="ball"></div>
+  </div>
 </body>
 </html>

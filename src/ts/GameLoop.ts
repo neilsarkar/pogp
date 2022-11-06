@@ -5,6 +5,7 @@ export class GameLoop {
 	isApplicationRunning: boolean;
 	frame: bigint;
 	tick: Pog.Tick;
+	handle: number;
 
 	// inputs
 	browserInput : BrowserInput;
@@ -14,6 +15,7 @@ export class GameLoop {
 		this.frame = 0n;
 		this.tick = tick;
 		this.browserInput = new BrowserInput();
+		this.handle = -1;
 
 		window.addEventListener('keydown', (ev) => {
 			if (ev.shiftKey && ev.code == 'KeyP') {
@@ -21,23 +23,31 @@ export class GameLoop {
 			}
 
 			if (!this.isApplicationRunning && ev.altKey && ev.code == 'KeyP') {
-				this.run();
+				this.step();
 			}
 		})
 	}
 
 	run() {
-		let startTime = +new Date;
 		if (this.isApplicationRunning) {
-			this.tick(this.frame++, this.browserInput.readInput());
-			this.profileFrame(+new Date - startTime);
+			this.step();
+			this.handle = requestAnimationFrame(this.run.bind(this));
 		}
+	}
 
-		requestAnimationFrame(this.run.bind(this));
+	step() {
+		let startTime = performance.now();
+		this.tick(this.frame++, this.browserInput.readInput());
+		this.profileFrame(performance.now() - startTime);
 	}
 
 	togglePause() {
 		this.isApplicationRunning = !this.isApplicationRunning;
+		if (!this.isApplicationRunning) {
+			cancelAnimationFrame(this.handle);
+		} else {
+			this.run();
+		}
 		console.log(`Game is ${(this.isApplicationRunning ? 'Running' : 'Paused')}`);
 	}
 

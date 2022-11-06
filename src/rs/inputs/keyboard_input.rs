@@ -1,4 +1,4 @@
-use super::key::Key;
+use super::{InputType, Key};
 
 #[derive(Debug, Default)]
 pub struct KeyboardInput {
@@ -24,12 +24,69 @@ impl KeyboardInput {
 
 impl From<Vec<Key>> for KeyboardInput {
     fn from(keys: Vec<Key>) -> Self {
-        Self { keys: keys }
+        Self { keys }
+    }
+}
+
+impl From<[u8; 10]> for KeyboardInput {
+    // todo: ignore first byte correctly
+    fn from(buffer: [u8; 10]) -> Self {
+        if buffer[0] != InputType::Keyboard as u8 {
+            panic!(
+                "Expected first byte to be {}, but it was {}",
+                InputType::Keyboard as u8,
+                buffer[0]
+            );
+        }
+
+        let mut keys = Vec::new();
+        let mut byte_index = 0;
+        let mut bit_index = 0;
+        let mut current_enum: u8 = 0;
+
+        while byte_index < buffer.len() - 1 {
+            if buffer[byte_index + 1] & (1 << bit_index) > 0 {
+                keys.push(Key::from(current_enum));
+            }
+
+            bit_index += 1;
+            current_enum += 1;
+            if bit_index == 8 {
+                byte_index += 1;
+                bit_index = 0;
+            }
+        }
+        Self { keys }
+    }
+}
+
+impl From<&[u8]> for KeyboardInput {
+    fn from(buffer: &[u8]) -> Self {
+        let mut keys = Vec::new();
+        let mut byte_index = 0;
+        let mut bit_index = 0;
+        let mut current_enum: u8 = 0;
+
+        while byte_index < buffer.len() {
+            if buffer[byte_index] & (1 << bit_index) > 0 {
+                keys.push(Key::from(current_enum));
+            }
+
+            bit_index += 1;
+            current_enum += 1;
+            if bit_index == 8 {
+                byte_index += 1;
+                bit_index = 0;
+            }
+        }
+        Self { keys }
     }
 }
 
 #[cfg(test)]
 mod keyboard_input {
+    use crate::inputs::InputType;
+
     use super::*;
 
     #[test]
@@ -57,8 +114,30 @@ mod keyboard_input {
 
     #[test]
     fn from_vec() {
-        let _input = KeyboardInput::from(vec![Key::Digit2]);
-        assert_eq!(_input.keys.len(), 1);
-        assert_eq!(_input.is_key_down(Key::Digit2), true, "builds from vec");
+        let input = KeyboardInput::from(vec![Key::Digit2]);
+        assert_eq!(input.keys.len(), 1);
+        assert_eq!(input.is_key_down(Key::Digit2), true, "builds from vec");
+    }
+
+    #[test]
+    fn from_u8array() {
+        let mut buffer: [u8; 10] = [0; 10];
+        buffer[0] = InputType::Keyboard as u8;
+        buffer[1] |= 1 << 1;
+        buffer[1] |= 1 << 2;
+        buffer[4] |= 1 << 6;
+        let input = KeyboardInput::from(buffer);
+        assert_eq!(input.keys.len(), 3);
+        assert_eq!(input.keys[0], Key::ArrowDown);
+        assert_eq!(input.keys[1], Key::ArrowLeft);
+        assert_eq!(input.keys[2], Key::Minus);
+    }
+
+    #[test]
+    #[should_panic(expected = "first byte to be 4, but it was 3")]
+    fn from_u8array_bad_input_type() {
+        let mut buffer: [u8; 10] = [0; 10];
+        buffer[0] = InputType::Mouse as u8;
+        let _nope = KeyboardInput::from(buffer);
     }
 }

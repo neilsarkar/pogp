@@ -253,9 +253,27 @@ https://www.w3.org/TR/uievents-code/#keyboard-mac
 }
 ```
 
-```
-0-128: bits for each key
-```
+data | type | byte index | bit index
+-|-|-|-
+`Null` | `bool` | 0 | 0
+`ArrowDown` | `bool` | 0 | 1
+`ArrowLeft` | `bool` | 0 | 2
+`ArrowRight` | `bool` | 0 | 3
+`ArrowUp` | `bool` | 0 | 4
+`Backspace` | `bool` | 0 | 5
+`Tab` | `bool` | 0 | 6
+`CapsLock` | `bool` | 0 | 7
+`Enter` | `bool` | 1 | 0
+`ShiftLeft` | `bool` | 1 | 1
+`ShiftRight` | `bool` | 1 | 2
+`ControlLeft` | `bool` | 1 | 3
+`MetaLeft` | `bool` | 1 | 4
+`AltLeft` | `bool` | 1 | 5
+`Space` | `bool` | 1 | 6
+`AltRight` | `bool` | 1 | 7
+`MetaRight` | `bool` | 2 | 0
+... | `bool` | ... | ...
+`IntlRo` | `bool` | 9 | 4
 
 **Custom**
 
@@ -459,3 +477,77 @@ value | name
 0 | `null`
 1 | `left`
 2 | `right`
+
+#### *Key Enum*
+
+value | name
+-|-
+0 | `Null`
+1 | `ArrowDown`
+2 | `ArrowLeft`
+3 | `ArrowRight`
+4 | `ArrowUp`
+5 | `Backspace`
+6 | `Tab`
+7 | `CapsLock`
+8 | `Enter`
+9 | `ShiftLeft`
+10 | `ShiftRight`
+11 | `ControlLeft`
+12 | `MetaLeft`
+13 | `AltLeft`
+14 | `Space`
+15 | `AltRight`
+16 | `MetaRight`
+17 | `ContextMenu`
+18 | `ControlRight`
+19 | `Backquote`
+20 | `Digit1`
+21 | `Digit2`
+22 | `Digit3`
+23 | `Digit4`
+24 | `Digit5`
+25 | `Digit6`
+26 | `Digit7`
+27 | `Digit8`
+28 | `Digit9`
+29 | `Digit0`
+30 | `Minus`
+31 | `Equal`
+32 | `IntlYen`
+33 | `KeyQ`
+34 | `KeyW`
+35 | `KeyE`
+36 | `KeyR`
+37 | `KeyT`
+38 | `KeyY`
+39 | `KeyU`
+40 | `KeyI`
+41 | `KeyO`
+42 | `KeyP`
+43 | `BracketLeft`
+44 | `BracketRight`
+45 | `Backslash`
+46 | `KeyA`
+47 | `KeyS`
+48 | `KeyD`
+49 | `KeyF`
+50 | `KeyG`
+51 | `KeyH`
+52 | `KeyJ`
+53 | `KeyK`
+54 | `KeyL`
+55 | `Semicolon`
+56 | `Quote`
+57 | `IntlBackslash`
+58 | `KeyZ`
+59 | `KeyX`
+60 | `KeyC`
+61 | `KeyV`
+62 | `KeyB`
+63 | `KeyN`
+64 | `KeyM`
+65 | `Comma`
+66 | `Period`
+67 | `Slash`
+68 | `IntlRo`
