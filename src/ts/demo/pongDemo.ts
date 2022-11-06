@@ -7,11 +7,11 @@ import { render } from './htmlRender';
 import {memory} from '../../../pkg/pogp_bg.wasm'
 
 const pong = new TsPong();
-const rustPong = RustPong.new();
+let rustPong = RustPong.new();
 
 const button = document.querySelector('button') as HTMLButtonElement;
 
-let runtime = 'ts';
+let runtime = 'rs';
 button.addEventListener('click', () => {
 	runtime = runtime == 'ts' ? 'rs' : 'ts';
 	console.log('clicked', runtime);
@@ -26,7 +26,14 @@ function tick(frame: bigint, inputs: ArrayBuffer) {
 		render(pong.state);
 	} else {
 		const ptr = rustPong.input_buffer();
-		const bytes = new Uint8Array(memory.buffer, ptr, 10);
+
+		let bytes: Uint8Array;
+		try {
+			bytes = new Uint8Array(memory.buffer, ptr, 10);
+		} catch(e) {
+			console.error(e);
+			window.location.reload();
+		}
 
 		let i = 0;
 		var byteArray = new Uint8Array(inputs);
