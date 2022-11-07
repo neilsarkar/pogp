@@ -12,9 +12,9 @@ The POG Protocol defines language-neutral binary and json representations of [In
 
 * prototype and playtest game logic in rust, c++, c# or typescript in the browser
 
-* compile the same game logic code for unreal, unity, bevy, godot etc
+* compile your logic for unreal, unity, bevy, godot etc (WIP)
 
-* support online multiplayer by running the same game logic code on a server or exchanging binary inputs or state peer to peer
+* support online multiplayer by running your logic on a server or exchanging binary input payloads peer to peer
 
 ### **Open**
 
@@ -22,15 +22,15 @@ The POG Protocol defines language-neutral binary and json representations of [In
 
 * state representations use open standards (WIP)
 
-* games that adopt the protocol can utilize shared solutions for common functionality
+* games that adopt the protocol can benefit from shared solutions for common functionality
 
 ### **Game**
 
-* immersion during the development process is sacrosanct. making games feels like playing games
+* immersion during the development process is sacrosanct. making games feels like playing games.
+
+* memory management is baked in to the protocol
 
 * all the tools you use to build for mobile and console targets can be used with your pogp-compliant binary (WIP)
-
-* memory management is baked in to the design of the protocol
 
 ## Goals
 
@@ -88,6 +88,9 @@ language | framework | environment | status
 `swift` | xcode/autolayout | ios | OPEN
 `typescript` | pixi.js | browser | @ns
 
+Contributors:
+
+@ns - @neilsarkar
 
 ## Why
 
