@@ -182,7 +182,7 @@ struct GameConfig {
 impl Default for GameConfig {
     fn default() -> Self {
         Self {
-            ball_speed: 0.8,
+            ball_speed: 1.6,
             paddle_speed: 1.0,
         }
     }
