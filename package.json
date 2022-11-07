@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "dev": "yarn wasmwatch & vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "parceldev": "parcel index.html",
     "parceldemo": "parcel input.html",
