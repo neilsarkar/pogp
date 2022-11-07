@@ -6,5 +6,14 @@ export default defineConfig({
 	plugins: [
 		wasm(),
 		topLevelAwait()
-	]
+	],
+	// https://github.com/sveltejs/kit/issues/859#issuecomment-1184696144
+	optimizeDeps: {
+		esbuildOptions: {
+			target: 'es2020'
+		}
+	},
+	build: {
+		target: 'es2020'
+	}
 })
