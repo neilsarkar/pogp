@@ -17,7 +17,7 @@ macro_rules! log {
 // https://rustwasm.github.io/docs/book/game-of-life/implementing.html
 // https://serde.rs/#data-formats
 
-#[wasm_bindgen]
+#[cfg_attr(target_family = "wasm", wasm_bindgen)]
 pub struct Game {
     input_buffer: [u8; 10],
     keyboard: KeyboardSnapshot,
@@ -25,7 +25,7 @@ pub struct Game {
     config: GameConfig,
 }
 
-#[wasm_bindgen]
+#[cfg_attr(target_family = "wasm", wasm_bindgen)]
 impl Game {
     pub fn new() -> Game {
         utils::set_panic_hook();
@@ -188,7 +188,7 @@ impl Default for GameConfig {
     }
 }
 
-#[wasm_bindgen]
+#[cfg_attr(target_family = "wasm", wasm_bindgen)]
 #[derive(Default, Copy, Clone)]
 pub struct GameState {
     pub p0: Paddle,
@@ -198,7 +198,7 @@ pub struct GameState {
     pub p1_score: i32,
 }
 
-#[wasm_bindgen]
+#[cfg_attr(target_family = "wasm", wasm_bindgen)]
 #[derive(Default, Copy, Clone)]
 pub struct Paddle {
     pub x: f32,
@@ -207,7 +207,7 @@ pub struct Paddle {
     pub h: f32,
 }
 
-#[wasm_bindgen]
+#[cfg_attr(target_family = "wasm", wasm_bindgen)]
 #[derive(Default, Copy, Clone)]
 pub struct Ball {
     pub x: f32,
@@ -217,7 +217,7 @@ pub struct Ball {
     pub v: Vector2,
 }
 
-#[wasm_bindgen]
+#[cfg_attr(target_family = "wasm", wasm_bindgen)]
 #[derive(Default, Copy, Clone)]
 pub struct Vector2 {
     pub x: f32,
