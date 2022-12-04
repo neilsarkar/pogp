@@ -104,7 +104,7 @@ Also the separation of logic and rendering will enable teams to scale their deve
 
 ## Interactive Examples (WIP)
 
-https://pogp.gg/examples/pong (WIP)
+https://pogprotocol.com (WIP)
 
 # Reference
 
