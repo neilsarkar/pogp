@@ -3,6 +3,9 @@ name = "pogp"
 version = "0.1.0"
 edition = "2021"
 authors = ["Neil Sarkar <neil@nullent.com>"]
+description = "The POG Protocol defines language-neutral binary and json representations of Inputs and State."
+repository = "https://github.com/neilsarkar/pogp"
+license = "MIT OR Apache-2.0"
 
 [features]
 default = ["console_error_panic_hook"]
