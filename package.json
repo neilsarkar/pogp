@@ -9,7 +9,7 @@
     "dev": "yarn wasmwatch & vite",
     "build": "yarn wasmpack && vite build",
     "preview": "vite preview",
-    "test": "jest",
+    "test": "jest && cargo test",
     "installrust": "which rustup || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y",
     "installwasm": "which wasm-pack || curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh",
     "wasmpack": "wasm-pack build",
