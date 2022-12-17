@@ -1,10 +1,10 @@
 import {GameLoop} from '../ts/src/GameLoop';
 import {Pong as TsPong} from './Pong';
-import {Game as RustPong} from '../rs/pkg/pogp';
+import {Game as RustPong} from './pkg/pogp_demo';
 
 import { render } from './htmlRender';
 // https://github.com/rustwasm/wasm-bindgen/issues/2456
-import {memory} from '../rs/pkg/pogp_bg.wasm'
+import {memory} from './pkg/pogp_demo_bg.wasm'
 
 const pong = new TsPong();
 let rustPong = RustPong.new();

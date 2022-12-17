@@ -16,8 +16,8 @@ case "$1" in
 		(cd ts && yarn)
 		;;
 	dev)
-		# sq: ctrl+c to interrupt both
-		(cd rs && cargo watch -w src -s "wasm-pack build") & (cd demo && yarn dev)
+		# sq: ctrl+c to interrupt both from sh script
+		(cd demo && yarn dev)
 		;;
 	build)
 		(cd rs && wasm-pack build)
