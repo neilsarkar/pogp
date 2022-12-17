@@ -1,16 +1,33 @@
+use pogp::inputs::{Key, KeyboardInput, KeyboardSnapshot};
+
+// TODO: get time measurement on wasm or c
+// use std::time::Instant;
+
 #[cfg(target_family = "wasm")]
 use wasm_bindgen::prelude::*;
-
-use pogp::inputs::{Key, KeyboardInput, KeyboardSnapshot};
-mod utils;
-
+#[cfg(target_family = "wasm")]
 extern crate web_sys;
-
+#[cfg(target_family = "wasm")]
+mod utils;
 // A macro to provide `println!(..)`-style syntax for `console.log` logging.
+#[cfg(target_family = "wasm")]
 #[allow(unused_macros)]
 macro_rules! log {
     ( $( $t:tt )* ) => {
         web_sys::console::log_1(&format!( $( $t )* ).into());
+    }
+}
+
+struct GameConfig {
+    ball_speed: f32,
+    paddle_speed: f32,
+}
+impl Default for GameConfig {
+    fn default() -> Self {
+        Self {
+            ball_speed: 1.6,
+            paddle_speed: 1.0,
+        }
     }
 }
 
@@ -23,32 +40,62 @@ pub struct Game {
     keyboard: KeyboardSnapshot,
     pub state: GameState,
     config: GameConfig,
+    is_paused: bool,
+
+    // now: Instant,
+    // https://gafferongames.com/post/fix_your_timestep/
+    accumulator: u128,
 }
 
 #[cfg_attr(target_family = "wasm", wasm_bindgen)]
 impl Game {
     pub fn new() -> Game {
+        #[cfg(target_family = "wasm")]
         utils::set_panic_hook();
+
         let mut game = Self {
             input_buffer: [0; 10],
             keyboard: KeyboardSnapshot::new(),
             state: Default::default(),
             config: Default::default(),
+            is_paused: false,
+            accumulator: 0,
+            // now: Instant::now(),
         };
         game.reset();
         game
     }
 
+    // TODO: accept input buffer here or output input buffer to unity
+    // pub fn tick(&mut self, input_buffer: &[u8], _frame: u64) {
     pub fn tick(&mut self, _frame: u64) {
+        // TODO: move to derivable
+        if self.is_paused {
+            return;
+        }
+        // let now = Instant::now();
+        // let millis = now.duration_since(self.now).as_millis();
+        // let dt: f32 = (millis as f32) / 20.0;
+        // self.accumulator += millis;
+        // self.now = now;
+        self.accumulator += 16;
+
         // apply inputs from binary pogp input buffer to move paddles
         self.apply_inputs();
 
-        // check collisions between ball and paddles
-        self.process_collisions();
+        // TODO: make this work for both with timing
+        // let dt = 0.01666;
+        let dt = 1.0;
 
-        // apply velocity to ball position
-        self.state.ball.x += self.state.ball.v.x;
-        self.state.ball.y += self.state.ball.v.y;
+        while self.accumulator >= 16 {
+            // check collisions between ball and paddles
+            self.process_collisions();
+
+            // apply velocity to ball position
+            self.state.ball.x += self.state.ball.v.x * dt;
+            self.state.ball.y += self.state.ball.v.y * dt;
+            self.accumulator -= 16;
+        }
 
         // check for win condition
         if self.state.ball.x < 0.0 {
@@ -60,6 +107,7 @@ impl Game {
         }
     }
 
+    // fn apply_inputs(&mut self, input_buffer: &[u8]) {
     fn apply_inputs(&mut self) {
         let keyboard_input = KeyboardInput::from(self.input_buffer);
         self.keyboard.add_input(keyboard_input);
@@ -175,20 +223,8 @@ impl BoundingBox for Ball {
     }
 }
 
-struct GameConfig {
-    ball_speed: f32,
-    paddle_speed: f32,
-}
-impl Default for GameConfig {
-    fn default() -> Self {
-        Self {
-            ball_speed: 1.6,
-            paddle_speed: 1.0,
-        }
-    }
-}
-
 #[cfg_attr(target_family = "wasm", wasm_bindgen)]
+#[cfg_attr(not(target_family = "wasm"), repr(C))]
 #[derive(Default, Copy, Clone)]
 pub struct GameState {
     pub p0: Paddle,
@@ -199,6 +235,7 @@ pub struct GameState {
 }
 
 #[cfg_attr(target_family = "wasm", wasm_bindgen)]
+#[cfg_attr(not(target_family = "wasm"), repr(C))]
 #[derive(Default, Copy, Clone)]
 pub struct Paddle {
     pub x: f32,
@@ -208,6 +245,7 @@ pub struct Paddle {
 }
 
 #[cfg_attr(target_family = "wasm", wasm_bindgen)]
+#[cfg_attr(not(target_family = "wasm"), repr(C))]
 #[derive(Default, Copy, Clone)]
 pub struct Ball {
     pub x: f32,
@@ -218,6 +256,7 @@ pub struct Ball {
 }
 
 #[cfg_attr(target_family = "wasm", wasm_bindgen)]
+#[cfg_attr(not(target_family = "wasm"), repr(C))]
 #[derive(Default, Copy, Clone)]
 pub struct Vector2 {
     pub x: f32,
