@@ -1,5 +1,5 @@
 import {GameState as TsGameState} from './types';
-import {GameState as RustGameState} from '../../../pkg/pogp';
+import {GameState as RustGameState} from '../pkg/pogp';
 
 const p0div = document.querySelector('.left.paddle') as HTMLDivElement;
 const p1div = document.querySelector('.right.paddle') as HTMLDivElement;

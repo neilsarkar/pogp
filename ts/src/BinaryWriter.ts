@@ -3,7 +3,7 @@ export class BinaryWriter {
 	offset: number; 	 // this is the current offset in bytes
 	bitOffset: number; // current offset in bits within the given byte for bools
 
-	constructor(buffer: Uint8Array, length?: number) {
+	constructor(buffer?: Uint8Array | null, length?: number) {
 		this.buffer = buffer || new Uint8Array(length);
 		this.offset = 0;
 		this.bitOffset = 0;

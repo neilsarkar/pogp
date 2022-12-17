@@ -1,6 +1,6 @@
-import { ButtonPosition, InputType } from "../../src/ts/enums";
-import { GamepadSnapshot } from "../../src/ts/GamepadSnapshot";
-import { Pog } from "../../src/ts/types";
+import { ButtonPosition, InputType } from "../src/enums";
+import { GamepadSnapshot } from "../src/GamepadSnapshot";
+import { Pog } from "../src/types";
 
 describe('GamepadSnapshot', function() {
 	describe('.isButtonDown', function() {

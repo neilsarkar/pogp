@@ -1,0 +1,28 @@
+#!/bin/zsh
+
+# https://unix.stackexchange.com/questions/76505/unix-portable-way-to-get-scripts-absolute-path-in-zsh
+self=${0:a}
+scriptdir=${0:a:h}
+
+case "$1" in
+	test)
+		(cd ts && yarn test) || exit 1
+		cargo test || exit 1
+		;;
+	install)
+		which rustup || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+		which wasm-pack || curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+		;;
+	dev)
+		(cd demo && yarn dev)
+		;;
+	watch)
+		cargo watch -w src/rs -s \"wasm-pack build\"
+		;;
+	build)
+		wasm-pack build
+		;;
+	*)
+		$self test
+		;;
+esac

@@ -1,5 +1,4 @@
 import { InputType, ButtonPosition, Hand, Key } from "./enums"
-import { KeyboardSnapshot } from "./KeyboardSnapshot";
 
 export declare namespace Pog {
 	export type Inputs = {

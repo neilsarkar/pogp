@@ -1,0 +1,22 @@
+{
+  "name": "pogp",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Neil Sarkar",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "yarn wasmwatch & vite",
+    "build": "yarn wasmpack && vite build",
+    "preview": "vite preview",
+    "test": "jest",
+    "wasmpack": "wasm-pack build",
+    "wasmwatch": "cargo watch -w src/rs -s \"wasm-pack build\""
+  },
+  "devDependencies": {
+    "@types/jest": "^29.1.2",
+    "jest": "^29.2.0",
+    "ts-jest": "^29.0.3",
+    "typescript": "^4.8.4"
+  }
+}

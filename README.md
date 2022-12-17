@@ -70,7 +70,7 @@ __Game Logic Client Libraries__
 
 language | dev environment | inputs | state | wasm support
 -|-|-|-|-
-`c#` | unity | OPEN | OPEN | OPEN
+`c#` | unity | @ns | @ns | @ns
 `c++` | unreal | OPEN | OPEN | OPEN
 `rust` | bevy | OPEN | OPEN | OPEN
 `c#` | browser | OPEN | OPEN | OPEN

@@ -1,9 +1,9 @@
-import { Hand, Key } from "../enums";
-import { GamepadSnapshot } from "../GamepadSnapshot";
-import { KeyboardSnapshot } from "../KeyboardSnapshot";
-import { MarshalInput } from "../MarshalInput";
+import { Hand, Key } from "../ts/src/enums";
+import { GamepadSnapshot } from "../ts/src/GamepadSnapshot";
+import { KeyboardSnapshot } from "../ts/src/KeyboardSnapshot";
+import { MarshalInput } from "../ts/src/MarshalInput";
 import { Ball, BoundingBox, GameState } from "./types";
-import {clamp} from '../lib';
+import {clamp} from '../ts/src/lib';
 
 let speed = .75;
 

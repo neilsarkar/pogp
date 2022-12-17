@@ -1,4 +1,4 @@
-import {toBinaryString } from '../../src/ts/lib';
+import {toBinaryString } from '../src/lib';
 import assert from 'assert';
 
 describe('toBinaryString', () => {
