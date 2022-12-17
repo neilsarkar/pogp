@@ -1,19 +1,14 @@
 {
   "name": "pogp",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "pongDemo.ts",
   "author": "Neil Sarkar",
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "dev": "yarn wasmwatch & vite",
-    "build": "yarn wasmpack && vite build",
-    "preview": "vite preview",
-    "test": "jest && cargo test",
-    "installrust": "which rustup || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y",
-    "installwasm": "which wasm-pack || curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh",
-    "wasmpack": "wasm-pack build",
-    "wasmwatch": "cargo watch -w ../src/rs -s \"wasm-pack build\""
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "devDependencies": {
     "typescript": "^4.8.4",

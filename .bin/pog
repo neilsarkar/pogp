@@ -12,17 +12,20 @@ case "$1" in
 	install)
 		which rustup || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 		which wasm-pack || curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+		which yarn || npm install --global yarn
+		(cd ts && yarn)
 		;;
 	dev)
-		(cd demo && yarn dev)
-		;;
-	watch)
-		cargo watch -w src/rs -s \"wasm-pack build\"
+		(cd rs && cargo watch -w src -s "wasm-pack build") & (cd demo && yarn dev)
 		;;
 	build)
-		wasm-pack build
+		(cd rs && wasm-pack build)
 		;;
 	*)
-		$self test
+		echo "Usage:"
+		echo "💾 pog install - install dependencies"
+		echo "🛠  pog dev     - live reload of rust and typescript"
+		echo "✅ pog test    - run unit tests"
+		echo "🏗  pog build   - build for deployment"
 		;;
 esac
