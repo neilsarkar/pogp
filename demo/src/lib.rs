@@ -1,3 +1,4 @@
+#[cfg(target_family = "wasm")]
 use wasm_bindgen::prelude::*;
 
 use pogp::inputs::{Key, KeyboardInput, KeyboardSnapshot};
