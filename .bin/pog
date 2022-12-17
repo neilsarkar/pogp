@@ -7,15 +7,16 @@ scriptdir=${0:a:h}
 case "$1" in
 	test)
 		(cd ts && yarn test) || exit 1
-		cargo test || exit 1
+		(cd rs && cargo test) || exit 1
 		;;
 	install)
-		which rustup || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-		which wasm-pack || curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
-		which yarn || npm install --global yarn
+		which rustup &> /dev/null || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+		which wasm-pack &> /dev/null || curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+		which yarn &> /dev/null || npm install --global yarn
 		(cd ts && yarn)
 		;;
 	dev)
+		# sq: ctrl+c to interrupt both
 		(cd rs && cargo watch -w src -s "wasm-pack build") & (cd demo && yarn dev)
 		;;
 	build)
