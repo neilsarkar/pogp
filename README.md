@@ -1,4 +1,4 @@
-# Portable Open Game Protocol 0.0.3
+# Portable Open Game Protocol 0.0.4
 
 Making games is hard. It shouldn't have to be.
 

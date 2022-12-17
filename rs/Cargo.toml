@@ -1,6 +1,6 @@
 [package]
 name = "pogp"
-version = "0.0.3"
+version = "0.0.4"
 edition = "2021"
 authors = ["Neil Sarkar <neil@nullent.com>"]
 description = "The POG Protocol defines language-neutral binary and json representations of Inputs and State."
