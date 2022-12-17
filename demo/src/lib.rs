@@ -1,20 +1,19 @@
 use pogp::inputs::{Key, KeyboardInput, KeyboardSnapshot};
 
 // TODO: get time measurement on wasm or c
-// use std::time::Instant;
-
-#[cfg(target_family = "wasm")]
-use wasm_bindgen::prelude::*;
-#[cfg(target_family = "wasm")]
-extern crate web_sys;
-#[cfg(target_family = "wasm")]
-mod utils;
-// A macro to provide `println!(..)`-style syntax for `console.log` logging.
-#[cfg(target_family = "wasm")]
-#[allow(unused_macros)]
-macro_rules! log {
-    ( $( $t:tt )* ) => {
-        web_sys::console::log_1(&format!( $( $t )* ).into());
+cfg_if::cfg_if! {
+    if #[cfg(target_family = "wasm")] {
+        use wasm_bindgen::prelude::*;
+        extern crate web_sys;
+        mod utils;
+        #[allow(unused_macros)]
+        macro_rules! log {
+            ( $( $t:tt )* ) => {
+                web_sys::console::log_1(&format!( $( $t )* ).into());
+            }
+        }
+    } else {
+        use std::time::Instant;
     }
 }
 
@@ -42,7 +41,8 @@ pub struct Game {
     config: GameConfig,
     is_paused: bool,
 
-    // now: Instant,
+    #[cfg(not(target_family = "wasm"))]
+    now: Instant,
     // https://gafferongames.com/post/fix_your_timestep/
     accumulator: u128,
 }
@@ -60,32 +60,45 @@ impl Game {
             config: Default::default(),
             is_paused: false,
             accumulator: 0,
-            // now: Instant::now(),
+            #[cfg(not(target_family = "wasm"))]
+            now: Instant::now(),
         };
         game.reset();
         game
     }
 
-    // TODO: accept input buffer here or output input buffer to unity
-    // pub fn tick(&mut self, input_buffer: &[u8], _frame: u64) {
     pub fn tick(&mut self, _frame: u64) {
-        // TODO: move to derivable
+        // apply inputs from binary pogp input buffer to move paddles
+        let keyboard_input = KeyboardInput::from(self.input_buffer);
+        self.apply_inputs(keyboard_input);
+
+        self.shared_tick(_frame);
+    }
+
+    pub fn unity_tick(&mut self, input_buffer: &[u8], _frame: u64) {
         if self.is_paused {
             return;
         }
-        // let now = Instant::now();
-        // let millis = now.duration_since(self.now).as_millis();
-        // let dt: f32 = (millis as f32) / 20.0;
-        // self.accumulator += millis;
-        // self.now = now;
-        self.accumulator += 16;
 
-        // apply inputs from binary pogp input buffer to move paddles
-        self.apply_inputs();
+        let keyboard_input = KeyboardInput::from(input_buffer);
+        self.apply_inputs(keyboard_input);
 
-        // TODO: make this work for both with timing
-        // let dt = 0.01666;
-        let dt = 1.0;
+        self.shared_tick(_frame);
+    }
+
+    fn shared_tick(&mut self, _frame: u64) {
+        cfg_if::cfg_if! {
+            if #[cfg(target_family = "wasm")] {
+                self.accumulator += 16;
+                let dt = 1.0;
+            } else {
+                let now = Instant::now();
+                let millis = now.duration_since(self.now).as_millis();
+                let dt: f32 = (millis as f32) / 20.0;
+                self.accumulator += millis;
+                self.now = now;
+            }
+        }
 
         while self.accumulator >= 16 {
             // check collisions between ball and paddles
@@ -107,9 +120,7 @@ impl Game {
         }
     }
 
-    // fn apply_inputs(&mut self, input_buffer: &[u8]) {
-    fn apply_inputs(&mut self) {
-        let keyboard_input = KeyboardInput::from(self.input_buffer);
+    fn apply_inputs(&mut self, keyboard_input: KeyboardInput) {
         self.keyboard.add_input(keyboard_input);
 
         if self.keyboard.is_key(Key::ArrowDown) {
