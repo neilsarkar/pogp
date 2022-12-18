@@ -75,7 +75,6 @@ pub enum Key {
     IntlRo,
 }
 
-// todo: generate this from a macro
 impl From<u8> for Key {
     fn from(key: u8) -> Self {
         match key {
