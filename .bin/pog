@@ -12,27 +12,35 @@ unityScriptsDir="$unityProjectDir/Assets/Scripts"
 demoLibPath="$projectRoot/demo/target/debug/lib$libName.dylib"
 
 case "$1" in
-	test)
-		(cd ts && yarn test) || exit 1
-		(cd rs && cargo test) || exit 1
+	build)
+		(cd rs && wasm-pack build)
 		;;
+
+	bump)
+		cat "$projectRoot/version" | awk -vFS=. -vOFS=. '{$NF++;print}' > "$projectRoot/version"
+		;;
+
+	dev)
+		# sq: ctrl+c to interrupt both from sh script
+		(cd demo && yarn dev)
+		;;
+
 	install)
 		which rustup &> /dev/null || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 		which wasm-pack &> /dev/null || curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 		which yarn &> /dev/null || npm install --global yarn
 		(cd ts && yarn)
 		;;
-	dev)
-		# sq: ctrl+c to interrupt both from sh script
-		(cd demo && yarn dev)
+
+	test)
+		(cd ts && yarn test) || exit 1
+		(cd rs && cargo test) || exit 1
 		;;
-	build)
-		(cd rs && wasm-pack build)
-		;;
-	watchUnity)
+
+	unityWatch)
 		(cd demo && cargo watch -w src -s "$self buildUnity")
 		;;
-	buildUnity)
+	unityBuild)
 		(cd "$projectRoot/demo" && cargo build)
 		id=$(uuidgen)
 		mkdir -p "$unityPluginDir"
@@ -128,6 +136,7 @@ EOF
 		echo "🛠  pog dev       - live reload of rust and typescript"
 		echo "✅ pog test       - run unit tests"
 		echo "🏗  pog build     - build for web deployment"
-		echo "🗑 pog buildUnity - build for unity"
+		echo "🗑 pog unityBuild - build for unity"
+		echo "🗑 pog unityWatch - watch unity"
 		;;
 esac

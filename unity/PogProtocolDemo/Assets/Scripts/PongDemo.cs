@@ -43,29 +43,23 @@ public class PongDemo : MonoBehaviour
 		DrawBall(gameState.ball);
 	}
 
-    void DrawPaddle(Paddle paddle) {
-        DrawRect(paddle.x, paddle.y, paddle.w, paddle.h);
-    }
+	void DrawPaddle(Paddle paddle)
+	{
+		DrawRect(paddle.x, paddle.y, paddle.w, paddle.h);
+	}
 
 	void DrawBall(Ball ball)
 	{
-        DrawRect(ball.x, ball.y, ball.w, ball.w * screenWidth / screenHeight);
+		DrawRect(ball.x, ball.y, ball.w, ball.w * screenWidth / screenHeight);
 	}
 
-    public float screenWidth = 38f;
-    public float screenHeight = 20f;
+	public float screenWidth = 38f;
+	public float screenHeight = 20f;
 
-    void DrawRect(float x, float y, float w, float h) {
-        var rect = new Rect(x * screenWidth, y * screenHeight, w * screenWidth, h * screenHeight);
-        Debug.Log($"x: {rect.xMin}-{rect.xMax} y: {rect.yMin}-{rect.yMax}");
-        GUI.DrawTexture(rect, Texture2D.whiteTexture, ScaleMode.StretchToFill, false);
-    }
-
-	Vector3 GameToWorldPosition(float x, float y) {
-		return new Vector3(
-			-7.5f + (x / 100) * (7.5f*2),
-			4 - (y / 100) * (4f * 2),
-			0f
-		);
-    }
+	void DrawRect(float x, float y, float w, float h)
+	{
+		var rect = new Rect(x * screenWidth, y * screenHeight, w * screenWidth, h * screenHeight);
+		Debug.Log($"x: {rect.xMin}-{rect.xMax} y: {rect.yMin}-{rect.yMax}");
+		GUI.DrawTexture(rect, Texture2D.whiteTexture, ScaleMode.StretchToFill, false);
+	}
 }
