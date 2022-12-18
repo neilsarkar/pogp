@@ -5,24 +5,67 @@ using UnityEngine;
 
 public class PongDemo : MonoBehaviour
 {
-    GameState gameState;
-    IntPtr baton;
-    long frame;
+	[NonSerialized]
+	GameState gameState;
+	[NonSerialized]
+	IntPtr baton;
+	[NonSerialized]
+	long frame;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        Debug.Log($"Hello World");
-        Debug.Log($"1+1={PogpNative.pogp_add(1, 1)}");
-        PogpNative.pogp_start(out baton, out gameState);
+	void Awake()
+	{
+		PogpNative.pogp_start(out baton, out gameState);
+	}
+
+	// Update is called once per frame
+	void Update()
+	{
+		var inputBytes = Pogp.Inputs.ReadInputs();
+		gameState = PogpNative.pogp_tick(baton, frame++, inputBytes, inputBytes.Length);
+
+		Debug.Log($"ball.x={gameState.ball.x}");
+	}
+
+	void OnRenderObject()
+	{
+		Debug.Log($"{Time.frameCount} Render object");
+	}
+
+	void OnPostRender()
+	{
+		Debug.Log($"{Time.frameCount} PostRender");
+	}
+
+	void OnGUI()
+	{
+		DrawPaddle(gameState.p0);
+		DrawPaddle(gameState.p1);
+		DrawBall(gameState.ball);
+	}
+
+    void DrawPaddle(Paddle paddle) {
+        DrawRect(paddle.x, paddle.y, paddle.w, paddle.h);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        var inputBytes = Pogp.Inputs.ReadInputs();
-        gameState = PogpNative.pogp_tick(baton, frame++, inputBytes, inputBytes.Length);
+	void DrawBall(Ball ball)
+	{
+        DrawRect(ball.x, ball.y, ball.w, ball.w * screenWidth / screenHeight);
+	}
 
-        Debug.Log($"ball.x={gameState.ball.x}");
+    public float screenWidth = 38f;
+    public float screenHeight = 20f;
+
+    void DrawRect(float x, float y, float w, float h) {
+        var rect = new Rect(x * screenWidth, y * screenHeight, w * screenWidth, h * screenHeight);
+        Debug.Log($"x: {rect.xMin}-{rect.xMax} y: {rect.yMin}-{rect.yMax}");
+        GUI.DrawTexture(rect, Texture2D.whiteTexture, ScaleMode.StretchToFill, false);
+    }
+
+	Vector3 GameToWorldPosition(float x, float y) {
+		return new Vector3(
+			-7.5f + (x / 100) * (7.5f*2),
+			4 - (y / 100) * (4f * 2),
+			0f
+		);
     }
 }
