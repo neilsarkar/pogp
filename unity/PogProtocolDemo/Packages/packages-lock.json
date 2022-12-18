@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.neilsarkar.clearconsole": {
+      "version": "https://github.com/neilsarkar/clearconsole.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "78156930d66a4eabb47940ad2c81491abcbda13d"
+    },
     "com.unity.2d.animation": {
       "version": "7.0.9",
       "depth": 1,
