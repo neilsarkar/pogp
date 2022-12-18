@@ -5,6 +5,7 @@ self=${0:a}
 scriptdir=${0:a:h}
 
 libName="pogp_demo"
+unityPackageId="com.pogp.unitypkg"
 projectRoot="$scriptdir/.."
 unityProjectDir="$projectRoot/unity/PogProtocolDemo"
 unityPluginDir="$unityProjectDir/Assets/Plugins/Editor"
@@ -17,7 +18,16 @@ case "$1" in
 		;;
 
 	bump)
-		cat "$projectRoot/version" | awk -vFS=. -vOFS=. '{$NF++;print}' > "$projectRoot/version"
+		lastVersion=$(cat "$projectRoot/version")
+		# https://stackoverflow.com/questions/8653126/how-to-increment-version-number-in-a-shell-script
+		version=$(cat "$projectRoot/version" | awk -vFS=. -vOFS=. '{$NF++;print}')
+		# https://stackoverflow.com/questions/38021348/how-can-i-echo-out-things-without-a-newline
+		sed -i '' "s/$lastVersion/$version/g" version
+		sed -i '' "s/$lastVersion/$version/g" "$projectRoot/demo/Cargo.toml"
+		sed -i '' "s/$lastVersion/$version/g" "$projectRoot/ts/package.json"
+		sed -i '' "s/$lastVersion/$version/g" "$unityProjectDir/Packages/$unityPackageId/package.json"
+		sed -i '' "s/$lastVersion/$version/g" "README.md"
+		echo "Bumped version to $version"
 		;;
 
 	dev)
