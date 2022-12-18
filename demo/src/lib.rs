@@ -1,5 +1,30 @@
 use pogp::inputs::{Key, KeyboardInput, KeyboardSnapshot};
 
+#[no_mangle]
+pub extern "C" fn pogp_add(a: i32, b: i32) -> i32 {
+    a + b
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn pogp_start(baton_ptr: *mut *const Game, state_ptr: *mut *const GameState) {
+    let game = Game::new();
+    *state_ptr = Box::into_raw(Box::new(game.state));
+    *baton_ptr = Box::into_raw(Box::new(game));
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn pogp_tick(
+    baton_ptr: *mut Game,
+    frame: u64,
+    input_bytes: *const u8,
+    len: usize,
+) -> *const GameState {
+    let slice = std::slice::from_raw_parts(input_bytes, len);
+    let game = &mut *baton_ptr;
+    game.unity_tick(slice, frame);
+    Box::into_raw(Box::new(game.state))
+}
+
 // TODO: get time measurement on wasm or c
 cfg_if::cfg_if! {
     if #[cfg(target_family = "wasm")] {
