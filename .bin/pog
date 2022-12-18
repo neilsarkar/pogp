@@ -50,13 +50,15 @@ case "$1" in
 	unityWatch)
 		(cd demo && cargo watch -w src -s "$self buildUnity")
 		;;
+
 	unityBuild)
 		(cd "$projectRoot/demo" && cargo build)
 		id=$(uuidgen)
 		mkdir -p "$unityPluginDir"
 		mkdir -p "$unityScriptsDir"
 		# remove old generated files and metafiles
-		rm "$unityPluginDir/$libName"-*.dylib* &> /dev/null
+		# https://superuser.com/questions/1607629/how-to-suppress-error-messages-in-zsh
+		(rm "$unityPluginDir/$libName"-*.dylib*) &> /dev/null
 		cp "$demoLibPath" "$unityPluginDir/$libName-$id.dylib"
 
 		tee > "$unityScriptsDir/PogpNativeVersion.cs" <<EOF
@@ -65,8 +67,6 @@ public static class PogpNativeVersion {
 #if UNITY_EDITOR
 	public const string LibName = "$libName-$id";
 #else
-	// todo: copy version automatically on build with
-	// https://docs.unity3d.com/ScriptReference/Build.IPreprocessBuildWithReport.OnPreprocessBuild.html
 	public const string LibName = "$libName";
 #endif
 }
