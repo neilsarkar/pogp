@@ -137,8 +137,4 @@ describe('BinaryWriter', () => {
 			})
 		})
 	})
-
-	describe('writeString', function() {
-		it.todo('will be able to write a utf8 string')
-	})
 })

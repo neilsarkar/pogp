@@ -7,17 +7,8 @@ public static class PogpNative {
 	public const string libName = PogpNativeVersion.LibName;
 
 	[DllImport(libName)]
-	public static extern int pogp_add(int a, int b);
-
-	[DllImport(libName)]
 	public static extern void pogp_start(out IntPtr baton, out GameState g);
 
 	[DllImport(libName)]
 	public static extern GameState pogp_tick(IntPtr baton, long frame, byte[] inputs, int len);
-
-	// [DllImport(libName)]
-	// public static extern void pogp_pause(IntPtr baton);
-
-	// [DllImport(libName)]
-	// public static extern void pogp_unpause(IntPtr baton);
 }

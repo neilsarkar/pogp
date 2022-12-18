@@ -1,11 +1,6 @@
 use pogp::inputs::{Key, KeyboardInput, KeyboardSnapshot};
 
 #[no_mangle]
-pub extern "C" fn pogp_add(a: i32, b: i32) -> i32 {
-    a + b
-}
-
-#[no_mangle]
 pub unsafe extern "C" fn pogp_start(baton_ptr: *mut *const Game, state_ptr: *mut *const GameState) {
     let game = Game::new();
     *state_ptr = Box::into_raw(Box::new(game.state));
