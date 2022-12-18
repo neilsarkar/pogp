@@ -1,5 +1,11 @@
+mod pong_config;
 use pogp::inputs::{Key, KeyboardInput, KeyboardSnapshot};
+use pong::{GameState, Vector2};
+use pong_config::PongConfig;
 
+pub mod pong;
+
+// FFI methods
 #[no_mangle]
 pub unsafe extern "C" fn pogp_start(baton_ptr: *mut *const Game, state_ptr: *mut *const GameState) {
     let game = Game::new();
@@ -34,18 +40,11 @@ cfg_if::cfg_if! {
         }
     } else {
         use std::time::Instant;
-    }
-}
 
-struct GameConfig {
-    ball_speed: f32,
-    paddle_speed: f32,
-}
-impl Default for GameConfig {
-    fn default() -> Self {
-        Self {
-            ball_speed: 1.6,
-            paddle_speed: 1.0,
+        macro_rules! log {
+            ( $s:expr ) => {
+                println!($s);
+            }
         }
     }
 }
@@ -58,7 +57,7 @@ pub struct Game {
     input_buffer: [u8; 10],
     keyboard: KeyboardSnapshot,
     pub state: GameState,
-    config: GameConfig,
+    config: PongConfig,
     is_paused: bool,
 
     #[cfg(not(target_family = "wasm"))]
@@ -117,6 +116,7 @@ impl Game {
                 let dt: f32 = (millis as f32) / 20.0;
                 self.accumulator += millis;
                 self.now = now;
+                println!("millis = {}, dt = {}", millis, dt);
             }
         }
 
@@ -203,93 +203,4 @@ impl Game {
     pub fn input_buffer(&self) -> *const u8 {
         return self.input_buffer.as_ptr();
     }
-}
-
-impl Ball {
-    pub fn process_collisions(&mut self, paddle: Paddle, speed: f32) {
-        // if we're not colliding, do nothing
-        if !self.is_colliding(&paddle) {
-            return;
-        }
-        // reverse x direction
-        self.v.x = -self.v.x;
-
-        // if we hit the top third of the paddle, send ball at a 45 degree angle up
-        self.v.y = if (self.y + self.h / 2.0) < paddle.y + paddle.h / 3.0 {
-            -speed
-        // if we hit the bottom third of the paddle, send ball at a 45 degree angle down
-        } else if (self.y + self.h / 2.0) > paddle.y + 2.0 * paddle.h / 3.0 {
-            speed
-        // if we hit the middle of the paddle, send ball directly across
-        } else {
-            0.0
-        };
-    }
-}
-
-trait BoundingBox {
-    fn dimensions(&self) -> (f32, f32, f32, f32);
-    fn is_colliding(&self, other: &impl BoundingBox) -> bool;
-}
-
-impl BoundingBox for Paddle {
-    fn dimensions(&self) -> (f32, f32, f32, f32) {
-        (self.x, self.y, self.w, self.h)
-    }
-
-    fn is_colliding(&self, other: &impl BoundingBox) -> bool {
-        let (x, y, w, h) = other.dimensions();
-        self.x < x + w && self.x + self.w > x && self.y < y + h && self.h + self.y > y
-    }
-}
-
-impl BoundingBox for Ball {
-    fn dimensions(&self) -> (f32, f32, f32, f32) {
-        (self.x, self.y, self.w, self.h)
-    }
-
-    fn is_colliding(&self, other: &impl BoundingBox) -> bool {
-        let (x, y, w, h) = other.dimensions();
-        self.x < x + w && self.x + self.w > x && self.y < y + h && self.h + self.y > y
-    }
-}
-
-#[cfg_attr(target_family = "wasm", wasm_bindgen)]
-#[cfg_attr(not(target_family = "wasm"), repr(C))]
-#[derive(Default, Copy, Clone)]
-pub struct GameState {
-    pub p0: Paddle,
-    pub p1: Paddle,
-    pub ball: Ball,
-    pub p0_score: i32,
-    pub p1_score: i32,
-}
-
-#[cfg_attr(target_family = "wasm", wasm_bindgen)]
-#[cfg_attr(not(target_family = "wasm"), repr(C))]
-#[derive(Default, Copy, Clone)]
-pub struct Paddle {
-    pub x: f32,
-    pub y: f32,
-    pub w: f32,
-    pub h: f32,
-}
-
-#[cfg_attr(target_family = "wasm", wasm_bindgen)]
-#[cfg_attr(not(target_family = "wasm"), repr(C))]
-#[derive(Default, Copy, Clone)]
-pub struct Ball {
-    pub x: f32,
-    pub y: f32,
-    pub w: f32,
-    pub h: f32,
-    pub v: Vector2,
-}
-
-#[cfg_attr(target_family = "wasm", wasm_bindgen)]
-#[cfg_attr(not(target_family = "wasm"), repr(C))]
-#[derive(Default, Copy, Clone)]
-pub struct Vector2 {
-    pub x: f32,
-    pub y: f32,
 }

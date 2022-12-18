@@ -22,18 +22,6 @@ public class PongDemo : MonoBehaviour
 	{
 		var inputBytes = Pogp.Inputs.ReadInputs();
 		gameState = PogpNative.pogp_tick(baton, frame++, inputBytes, inputBytes.Length);
-
-		Debug.Log($"ball.x={gameState.ball.x}");
-	}
-
-	void OnRenderObject()
-	{
-		Debug.Log($"{Time.frameCount} Render object");
-	}
-
-	void OnPostRender()
-	{
-		Debug.Log($"{Time.frameCount} PostRender");
 	}
 
 	void OnGUI()
@@ -59,7 +47,6 @@ public class PongDemo : MonoBehaviour
 	void DrawRect(float x, float y, float w, float h)
 	{
 		var rect = new Rect(x * screenWidth, y * screenHeight, w * screenWidth, h * screenHeight);
-		Debug.Log($"x: {rect.xMin}-{rect.xMax} y: {rect.yMin}-{rect.yMax}");
 		GUI.DrawTexture(rect, Texture2D.whiteTexture, ScaleMode.StretchToFill, false);
 	}
 }

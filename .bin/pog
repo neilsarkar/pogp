@@ -48,7 +48,7 @@ case "$1" in
 		;;
 
 	unityWatch)
-		(cd demo && cargo watch -w src -s "$self buildUnity")
+		(cd demo && cargo watch -w src -s "$self unityBuild")
 		;;
 
 	unityBuild)
