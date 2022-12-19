@@ -18,6 +18,21 @@ case "$1" in
 		(cd demo && yarn build)
 		;;
 
+	cloudflare)
+		echo "$self"
+		echo $PATH
+		echo "which yarn:"
+		which yarn
+		echo "subshell which yarn:"
+		(cd demo && which yarn)
+		echo "Installing..."
+		$self install
+		echo "Installed."
+		echo $PATH
+		cd demo
+		yarn build
+		;;
+
 	bump)
 		lastVersion=$(cat "$projectRoot/version")
 		# https://stackoverflow.com/questions/8653126/how-to-increment-version-number-in-a-shell-script
