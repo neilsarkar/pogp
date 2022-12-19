@@ -1,6 +1,6 @@
 mod pong_config;
-use pogp::inputs::{Key, KeyboardInput, KeyboardSnapshot};
-use pong::{GameState, Vector2};
+use pogp::inputs::{KeyboardInput, KeyboardSnapshot};
+use pong::GameState;
 use pong_config::PongConfig;
 
 pub mod pong;
@@ -26,13 +26,13 @@ pub unsafe extern "C" fn pogp_tick(
     Box::into_raw(Box::new(game.state))
 }
 
-// TODO: get time measurement on wasm or c
 cfg_if::cfg_if! {
     if #[cfg(target_family = "wasm")] {
         use wasm_bindgen::prelude::*;
         extern crate web_sys;
         mod utils;
         #[allow(unused_macros)]
+        // TODO: expose log macro to callers
         macro_rules! log {
             ( $( $t:tt )* ) => {
                 web_sys::console::log_1(&format!( $( $t )* ).into());
@@ -41,6 +41,8 @@ cfg_if::cfg_if! {
     } else {
         use std::time::Instant;
 
+        #[allow(unused_macros)]
+        // TODO: allow formatting c logs
         macro_rules! log {
             ( $s:expr ) => {
                 println!($s);
@@ -58,7 +60,6 @@ pub struct Game {
     keyboard: KeyboardSnapshot,
     pub state: GameState,
     config: PongConfig,
-    is_paused: bool,
 
     #[cfg(not(target_family = "wasm"))]
     now: Instant,
@@ -77,12 +78,11 @@ impl Game {
             keyboard: KeyboardSnapshot::new(),
             state: Default::default(),
             config: Default::default(),
-            is_paused: false,
             accumulator: 0,
             #[cfg(not(target_family = "wasm"))]
             now: Instant::now(),
         };
-        game.reset();
+        pong::start(&mut game.state, &game.config);
         game
     }
 
@@ -95,10 +95,6 @@ impl Game {
     }
 
     pub fn unity_tick(&mut self, input_buffer: &[u8], _frame: u64) {
-        if self.is_paused {
-            return;
-        }
-
         let keyboard_input = KeyboardInput::from(input_buffer);
         self.apply_inputs(keyboard_input);
 
@@ -116,88 +112,21 @@ impl Game {
                 let dt: f32 = (millis as f32) / 20.0;
                 self.accumulator += millis;
                 self.now = now;
-                println!("millis = {}, dt = {}", millis, dt);
             }
         }
 
         while self.accumulator >= 16 {
-            // check collisions between ball and paddles
-            self.process_collisions();
-
-            // apply velocity to ball position
-            self.state.ball.x += self.state.ball.v.x * dt;
-            self.state.ball.y += self.state.ball.v.y * dt;
+            pong::fixed_update(&mut self.state, &self.config, dt);
             self.accumulator -= 16;
         }
 
-        // check for win condition
-        if self.state.ball.x < 0.0 {
-            self.state.p1_score += 1;
-            self.reset();
-        } else if self.state.ball.x + self.state.ball.w > 100.0 {
-            self.state.p0_score += 1;
-            self.reset();
-        }
+        pong::update(&mut self.state, &self.config);
     }
 
     fn apply_inputs(&mut self, keyboard_input: KeyboardInput) {
         self.keyboard.add_input(keyboard_input);
 
-        if self.keyboard.is_key(Key::ArrowDown) {
-            self.state.p0.y += self.config.paddle_speed;
-        }
-        if self.keyboard.is_key(Key::ArrowUp) {
-            self.state.p0.y -= self.config.paddle_speed;
-        }
-        if self.keyboard.is_key(Key::KeyW) {
-            self.state.p1.y -= self.config.paddle_speed;
-        }
-        if self.keyboard.is_key(Key::KeyS) {
-            self.state.p1.y += self.config.paddle_speed;
-        }
-    }
-
-    fn process_collisions(&mut self) {
-        // clamp paddles to remain on screen
-        self.state.p0.y = self.state.p0.y.clamp(0.0, 100.0 - self.state.p0.h);
-        self.state.p1.y = self.state.p1.y.clamp(0.0, 100.0 - self.state.p1.h);
-
-        // bounce ball off top and bottom
-        if self.state.ball.y < 0.0 || self.state.ball.y > 100.0 - self.state.ball.h {
-            self.state.ball.v.y *= -1.0;
-        }
-
-        //check collision between ball and left paddle
-        self.state
-            .ball
-            .process_collisions(self.state.p0, self.config.ball_speed);
-        // check collision between ball and right paddle
-        self.state
-            .ball
-            .process_collisions(self.state.p1, self.config.ball_speed);
-    }
-
-    // for clarity in this toy example, positions are represented as floats
-    // (0,0) is top left corner, (100, 100) is bottom right
-    fn reset(&mut self) {
-        self.state.p0.w = 3.0;
-        self.state.p0.h = 15.0;
-        self.state.p0.x = 0.0;
-        self.state.p0.y = 50.0 - self.state.p0.h / 2.0;
-
-        self.state.p1.w = 3.0;
-        self.state.p1.h = 15.0;
-        self.state.p1.x = 100.0 - self.state.p1.w;
-        self.state.p1.y = 50.0 - self.state.p1.h / 2.0;
-
-        self.state.ball.w = 3.0;
-        self.state.ball.h = 3.0;
-        self.state.ball.x = 50.0 - self.state.ball.w / 2.0;
-        self.state.ball.y = 50.0 - self.state.ball.h / 2.0;
-        self.state.ball.v = Vector2 {
-            x: self.config.ball_speed,
-            y: 0.0,
-        };
+        pong::process_inputs(&mut self.state, &self.config, &self.keyboard);
     }
 
     pub fn input_buffer(&self) -> *const u8 {

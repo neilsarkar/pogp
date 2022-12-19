@@ -22,20 +22,20 @@ impl KeyboardSnapshot {
         self.advance_index();
     }
 
-    pub fn is_key_down(&mut self, key: Key) -> bool {
+    pub fn is_key_down(&self, key: Key) -> bool {
         self.inputs[self.head()].is_key_down(key)
             && !self.inputs[self.last_frame()].is_key_down(key)
     }
 
-    pub fn is_key_pressed(&mut self, key: Key) -> bool {
+    pub fn is_key_pressed(&self, key: Key) -> bool {
         self.inputs[self.head()].is_key_down(key)
     }
 
-    pub fn is_key(&mut self, key: Key) -> bool {
+    pub fn is_key(&self, key: Key) -> bool {
         self.is_key_pressed(key)
     }
 
-    pub fn is_key_up(&mut self, key: Key) -> bool {
+    pub fn is_key_up(&self, key: Key) -> bool {
         !self.inputs[self.head()].is_key_down(key)
             && self.inputs[self.last_frame()].is_key_down(key)
     }
@@ -48,7 +48,7 @@ impl KeyboardSnapshot {
         }
     }
 
-    fn last_frame(&mut self) -> usize {
+    fn last_frame(&self) -> usize {
         match self.index {
             0 => INPUT_BUFFER_LENGTH - 1,
             1 => INPUT_BUFFER_LENGTH - 2,
@@ -56,7 +56,7 @@ impl KeyboardSnapshot {
         }
     }
 
-    fn head(&mut self) -> usize {
+    fn head(&self) -> usize {
         if self.index == 0 {
             INPUT_BUFFER_LENGTH - 1
         } else {
