@@ -3,7 +3,7 @@ name = "pogp"
 version = "0.0.5"
 edition = "2021"
 authors = ["Neil Sarkar <neil@nullent.com>"]
-description = "The POG Protocol defines language-neutral binary and json representations of Inputs and State."
+description = "The POG Protocol for game development defines a portable game loop and language-neutral binary representations of Inputs and State."
 repository = "https://github.com/neilsarkar/pogp"
 license = "MIT OR Apache-2.0"
 
