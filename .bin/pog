@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/sh
 
 # https://unix.stackexchange.com/questions/76505/unix-portable-way-to-get-scripts-absolute-path-in-zsh
 self=${0:a}
@@ -15,6 +15,7 @@ demoLibPath="$projectRoot/demo/target/debug/lib$libName.dylib"
 case "$1" in
 	build)
 		(cd rs && wasm-pack build)
+		(cd demo && yarn build)
 		;;
 
 	bump)
@@ -37,6 +38,7 @@ case "$1" in
 
 	install)
 		which rustup &> /dev/null || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+		export PATH="$HOME/.cargo/bin:$PATH"
 		which wasm-pack &> /dev/null || curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 		which yarn &> /dev/null || npm install --global yarn
 		(cd ts && yarn)
