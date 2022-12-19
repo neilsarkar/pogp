@@ -1,20 +1,20 @@
 # Portable Open Game Protocol 0.0.5
 
-Making games is hard. It shouldn't have to be.
-
 Making games should feel like playing games.
 
 ## Introducing the POG protocol
 
-The POG Protocol defines language-neutral binary and json representations of [Inputs](#inputs) and [State](#state).
+The POG Protocol defines language-neutral binary representations of [Inputs](#inputs) and [State](#state).
+
+This allows us to create a portable game loop that can be run in browser or any major game engine.
 
 ### **Portable**
 
-* prototype and playtest game logic in rust, c++, c# or typescript in the browser
+* browser - use [wasm](https://webassembly.org/) to prototype and playtest with hot reloading
 
-* compile your logic for unreal, unity, bevy, godot etc (WIP)
+* standalone / mobile / console - use [ffi](https://en.wikipedia.org/wiki/Foreign_function_interface) to bring your game loop into any game engine
 
-* support online multiplayer by running your logic on a server or exchanging binary input payloads peer to peer
+* online multiplayer - run your game loop on any web server or exchange pogp binary input peer to peer
 
 ### **Open**
 
@@ -28,55 +28,74 @@ The POG Protocol defines language-neutral binary and json representations of [In
 
 * immersion during the development process is sacrosanct. making games feels like playing games.
 
-* memory management is baked in to the protocol
+* the POG protocol is designed to be zero-copy, zero-alloc per frame
 
-* all the tools you use to build for mobile and console targets can be used with your pogp-compliant binary (WIP)
+* you can continue to use and benefit from all the great game making tools and rendering you use today for mobile, browser, standalone and console targets
 
 ## Goals
 
-The goal of the POG protocol is to help create better games for players, to allow indie devs to effectively compete with AAA, and to reduce crunch globally.
+The goal of the POG protocol is to help create better games for players, to make game development more accessible, and to reduce crunch.
 
-If this sounds ambitious, just look at the development ecosystem for web and app developers.
+The goal is for anyone familiar with basic software development to create a game using the protocol today, using the languages and tools they're already familiar with.
 
-Industry-wide adoption of the HTTP protocol and open source technologies like Linux leveled the playing field for web and app developers.
+Web and app developers benefit from industry-wide adoption of open technology like the HTTP protocol and Linux.
 
-Shared solutions and common development environments saved everyone countless years of time-to-market and ushered in an era of innovation and enlightenment in developer experience.
+Game developers have typically suffered from a more closed source mindset, with many shared solutions for crucial low-level problems locked behind paywalls or other privileged access.
 
-I believe that in many ways, game development is still in the dark ages.
-
-Why does it take most teams 3-4 years to get a game to market?
-
-Yes, crafting compelling experiences takes time and is hard. But the average hollywood movie takes 2 years to create.
-
-Yes, writing software takes time and is hard. But the average tech startup releases a first product in the first 6-12 months of development.
-
-I believe that technical debt is the silent killer across our industry.
-
-I believe that a lack of shared solutions is creating a barrier to entry for making games that excludes many voices.
-
-I believe it's inhumane for us to subject ourselves to 30 second immersion-breaking compilation times every day for years of development.
-
-I love games, and I hope that there can be a better world for developers and players of games.
+I love games, and I believe that by embracing open standards and shared solutions across languages and game engines, there can be a better world for developers and players of games.
 
 ## Project Status
 
-The Pog Protocol is in a pre-alpha state. The protocol itself is still being written, and client libraries do not yet exist beyond the demos in this repo.
+The Pog Protocol is in a pre-alpha state. The protocol itself is still being defined, and client libraries currently only exist for rust.
 
-For this to work for devs, we'll need domain experts contributing to client libraries for each major game engine and runtime environment.
+We are looking for domain experts to contribute to [libraries](#libraries) for each major game engine and runtime environment.
 
 If you are interested in contributing or adding an environment to the list, please open a github issue or drop me a line on discord `nu11#1111` or neil at nullent.com
 
+## Interactive Examples
+---
+
+Pong
+
+https://pogprotocol.com
+
+## Path to 1.0
+---
+* Define state protocol
+
+* Define rendering protocol
+
+* Flesh out existing libraries
+	* rust
+	* typescript
+	* unity c#
+
+* Add client libraries
+	* c++
+	* modern c#
+
+* Add online multiplayer demo
+	* in browser
+	* in a game engine
+
+* Add engine demos beyond unity
+	* unreal engine
+	* godot
+	* bevy
+
+## Client Libraries
+---
 __Game Logic Client Libraries__
 
 language | dev environment | inputs | state | wasm support
 -|-|-|-|-
-`c#` | unity | @ns | @ns | @ns
+`c#` | unity | **@ns** | **@ns** | n/a
 `c++` | unreal | OPEN | OPEN | OPEN
 `rust` | bevy | OPEN | OPEN | OPEN
 `c#` | browser | OPEN | OPEN | OPEN
 `c++` | browser | OPEN | OPEN | OPEN
-`rust` | browser | @ns | @ns | @ns
-`typescript` | browser | @ns | @ns | @ns
+`rust` | browser | **@ns** | **@ns** | **@ns**
+`typescript` | browser | **@ns** | **@ns** | **@ns**
 
 __Rendering Client Libraries__
 
@@ -90,24 +109,10 @@ language | framework | environment | status
 
 Contributors:
 
-@ns - @neilsarkar
+**@ns** - @neilsarkar
 
-## Why
-
-Why would it be useful to write these pieces in different languages or run them in different engines?
-
-Surely most devs / teams would prefer to write everything in one language and one framework (e.g. c++ with unreal, c# with unity, javascript with phaser, rust with bevy).
-
-In practice, any given team will likely stick to the language(s) and framework(s) they're currently using. But the shared input and state representations will allow for greater portability and sharing of solutions.
-
-Also the separation of logic and rendering will enable teams to scale their development better as the project size grows without having to embark on a costly rewrite when already behind schedule and over budget.
-
-## Interactive Examples (WIP)
-
-https://pogprotocol.com (WIP)
-
-# Reference
-
+## Reference
+---
 ## Inputs
 
 Inputs contain the state of the input at the current frame.
