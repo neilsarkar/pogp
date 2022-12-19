@@ -21,6 +21,7 @@ case "$1" in
 	cloudflare)
 		echo "$self"
 		echo $PATH
+		npm install -g yarn
 		echo "which yarn:"
 		which yarn
 		echo "subshell which yarn:"
