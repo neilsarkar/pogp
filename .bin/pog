@@ -1,8 +1,8 @@
 #!/bin/sh
 
 # https://unix.stackexchange.com/questions/76505/unix-portable-way-to-get-scripts-absolute-path-in-zsh
-self=${0:a}
-scriptdir=${0:a:h}
+scriptdir=$(cd -P -- "$(dirname -- "$0")" && printf '%s\n' "$(pwd -P)")
+self="$scriptdir/$(basename -- "$0")"
 
 libName="pogp_demo"
 unityPackageId="com.pogp.unitypkg"
