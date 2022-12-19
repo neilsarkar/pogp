@@ -1,0 +1,22 @@
+{
+  "name": "pogp",
+  "version": "1.0.0",
+  "main": "pongDemo.ts",
+  "author": "Neil Sarkar",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "yarn wasmwatch & vite",
+    "build": "yarn wasmpack && vite build",
+    "preview": "vite preview",
+    "wasmpack": "wasm-pack build",
+    "wasmwatch": "cargo watch -w src -s \"wasm-pack build\""
+
+  },
+  "devDependencies": {
+    "typescript": "^4.8.4",
+    "vite": "^3.2.1",
+    "vite-plugin-top-level-await": "^1.2.1",
+    "vite-plugin-wasm": "^3.1.0"
+  }
+}
