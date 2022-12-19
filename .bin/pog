@@ -45,7 +45,15 @@ case "$1" in
 		;;
 
 	test)
+		$self rtest || exit 1
+		$self ttest || exit 1
+		;;
+
+	ttest)
 		(cd ts && yarn test) || exit 1
+		;;
+
+	rtest)
 		(cd rs && cargo test) || exit 1
 		;;
 
