@@ -54,7 +54,7 @@ version = "0.0.4"
 
 [[package]]
 name = "pogp-demo"
-version = "0.0.4"
+version = "0.0.5"
 dependencies = [
  "cfg-if",
  "console_error_panic_hook",
