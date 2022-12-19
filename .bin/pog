@@ -25,6 +25,7 @@ case "$1" in
 		# https://stackoverflow.com/questions/38021348/how-can-i-echo-out-things-without-a-newline
 		sed -i '' "s/$lastVersion/$version/g" version
 		sed -i '' "s/$lastVersion/$version/g" "$projectRoot/demo/Cargo.toml"
+		sed -i '' "s/$lastVersion/$version/g" "$projectRoot/rs/Cargo.toml"
 		sed -i '' "s/$lastVersion/$version/g" "$projectRoot/ts/package.json"
 		sed -i '' "s/$lastVersion/$version/g" "$unityProjectDir/Packages/$unityPackageId/package.json"
 		sed -i '' "s/$lastVersion/$version/g" "README.md"
