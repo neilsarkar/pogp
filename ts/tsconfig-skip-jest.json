@@ -1,0 +1,7 @@
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		// without this line we run into errors when
+		"types": []
+	}
+}
