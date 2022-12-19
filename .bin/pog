@@ -18,22 +18,6 @@ case "$1" in
 		(cd demo && yarn build)
 		;;
 
-	cloudflare)
-		echo "$self"
-		echo $PATH
-		npm install -g yarn
-		echo "which yarn:"
-		which yarn
-		echo "subshell which yarn:"
-		(cd demo && which yarn)
-		echo "Installing..."
-		$self install
-		echo "Installed."
-		echo $PATH
-		cd demo
-		yarn build
-		;;
-
 	bump)
 		lastVersion=$(cat "$projectRoot/version")
 		# https://stackoverflow.com/questions/8653126/how-to-increment-version-number-in-a-shell-script
@@ -53,10 +37,11 @@ case "$1" in
 		;;
 
 	install)
-		which rustup &> /dev/null || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+		which rustup > /dev/null || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 		export PATH="$HOME/.cargo/bin:$PATH"
-		which wasm-pack &> /dev/null || curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
-		which yarn &> /dev/null || npm install --global yarn
+		which wasm-pack > /dev/null || curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+		which yarn > /dev/null || npm install --global yarn
+		(cd demo && yarn)
 		(cd ts && yarn)
 		;;
 

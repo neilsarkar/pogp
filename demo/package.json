@@ -11,6 +11,7 @@
     "preview": "vite preview",
     "wasmpack": "wasm-pack build",
     "wasmwatch": "cargo watch -w src -s \"wasm-pack build\""
+
   },
   "devDependencies": {
     "typescript": "^4.8.4",
