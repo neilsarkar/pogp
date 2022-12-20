@@ -14,6 +14,7 @@ demoLibPath="$projectRoot/demo/target/debug/lib$libName.dylib"
 
 case "$1" in
 	build)
+		$self install
 		(cd rs && wasm-pack build)
 		(cd demo && yarn build)
 		;;
@@ -27,6 +28,7 @@ case "$1" in
 		sed -i '' "s/$lastVersion/$version/g" "$projectRoot/demo/Cargo.toml"
 		sed -i '' "s/$lastVersion/$version/g" "$projectRoot/rs/Cargo.toml"
 		sed -i '' "s/$lastVersion/$version/g" "$projectRoot/ts/package.json"
+		sed -i '' "s/$lastVersion/$version/g" "$projectRoot/ts/README.md"
 		sed -i '' "s/$lastVersion/$version/g" "$unityProjectDir/Packages/$unityPackageId/package.json"
 		sed -i '' "s/$lastVersion/$version/g" "README.md"
 		echo "Bumped version to $version"
@@ -35,6 +37,8 @@ case "$1" in
 	dev)
 		# sq: ctrl+c to interrupt both from sh script
 		(cd demo && yarn dev)
+		# todo:
+		# (cd ts && yarn watch)
 		;;
 
 	install)
@@ -42,8 +46,8 @@ case "$1" in
 		export PATH="$HOME/.cargo/bin:$PATH"
 		which wasm-pack > /dev/null || curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 		which yarn > /dev/null || npm install --global yarn
-		(cd demo && yarn)
 		(cd ts && yarn)
+		(cd demo && yarn)
 		;;
 
 	test)
@@ -57,6 +61,10 @@ case "$1" in
 
 	rtest)
 		(cd rs && cargo test) || exit 1
+		;;
+
+	publish)
+		(cd rs && cargo publish)
 		;;
 
 	unityWatch)
@@ -143,14 +151,18 @@ public struct Vector2 {
 EOF
 		;;
 
-	*)
-		echo "Usage:"
+	adv)
 		echo "🆙 pog bump       - bump version number"
 		echo "💾 pog install    - install dependencies"
-		echo "🛠  pog dev        - live reload of rust and typescript"
-		echo "✅ pog test       - run unit tests"
-		echo "🏗  pog build      - build for web deployment"
 		echo "🗑  pog unityBuild - build for unity"
 		echo "🗑  pog unityWatch - watch unity"
+		;;
+
+	*)
+		echo "⚙️  pog adv     - show advanced commands"
+		echo "🏗  pog build   - build for web deployment"
+		echo "🚢 pog publish - publish pogp libraries"
+		echo "🛠  pog dev     - live reload of rust and typescript"
+		echo "✅ pog test    - run unit tests"
 		;;
 esac

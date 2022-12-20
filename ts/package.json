@@ -1,17 +1,37 @@
 {
   "name": "pogp",
   "version": "0.0.5",
-  "main": "index.js",
+  "exports": "./dist/index.js",
+  "types": "dist/index.d.ts",
+  "description": "The POG Protocol for game development defines a portable game loop and language-neutral binary representations of Inputs and State.",
   "author": "Neil Sarkar",
   "license": "MIT",
   "type": "module",
+  "homepage": "https://pogprotocol.com",
+  "engines": {
+    "node": ">= 16.0.0"
+  },
+  "repository": {
+    "url": "https://github.com/neilsarkar/pogp",
+    "type": "git"
+  },
+  "bugs": {
+    "url": "https://github.com/neilsarkar/pogp/issues"
+  },
+  "keywords": [
+    "POG Protocol",
+    "Game Development"
+  ],
   "scripts": {
-    "test": "jest"
+    "build": "tsc -p tsconfig-skip-jest.json",
+    "watch": "tsc -p tsconfig-skip-jest.json --watch",
+    "test": "jest",
+    "prepublish": "yarn build"
   },
   "devDependencies": {
-    "@types/jest": "^29.1.2",
-    "jest": "^29.2.0",
+    "@types/jest": "^29.2.4",
+    "jest": "^29.3.1",
     "ts-jest": "^29.0.3",
-    "typescript": "^4.8.4"
+    "typescript": "^4.9.4"
   }
 }

@@ -1,4 +1,4 @@
-import {GameLoop} from '../ts/src/GameLoop';
+import {GameLoop} from 'pogp';
 import {Pong as TsPong} from './Pong';
 import {Game as RustPong} from './pkg/pogp_demo';
 

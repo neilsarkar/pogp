@@ -1,0 +1,9 @@
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		// without this line we run into errors when using jest
+		"types": [],
+		// this generates the .d.ts files for all js in the dist/ folder
+		"declaration": true
+	}
+}
