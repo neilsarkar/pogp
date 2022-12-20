@@ -20,6 +20,6 @@
     "vite-plugin-wasm": "^3.1.0"
   },
   "dependencies": {
-    "pogp": "^0.0.5"
+    "pogp": "file:../ts"
   }
 }

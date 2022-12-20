@@ -37,6 +37,8 @@ case "$1" in
 	dev)
 		# sq: ctrl+c to interrupt both from sh script
 		(cd demo && yarn dev)
+		# todo:
+		# (cd ts && yarn watch)
 		;;
 
 	install)
@@ -44,8 +46,8 @@ case "$1" in
 		export PATH="$HOME/.cargo/bin:$PATH"
 		which wasm-pack > /dev/null || curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 		which yarn > /dev/null || npm install --global yarn
-		(cd demo && yarn)
 		(cd ts && yarn)
+		(cd demo && yarn)
 		;;
 
 	test)

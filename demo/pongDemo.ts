@@ -1,8 +1,6 @@
-import {GameLoop} from '../ts/src/GameLoop';
+import {GameLoop} from 'pogp';
 import {Pong as TsPong} from './Pong';
 import {Game as RustPong} from './pkg/pogp_demo';
-
-import {add} from 'pogp';
 
 import { render } from './htmlRender';
 // https://github.com/rustwasm/wasm-bindgen/issues/2456
@@ -12,8 +10,6 @@ const pong = new TsPong();
 let rustPong = RustPong.new();
 
 const button = document.querySelector('button') as HTMLButtonElement;
-
-console.log('supperoni', 'nope', add(1,2));
 
 let runtime = 'rs';
 button.addEventListener('click', () => {
