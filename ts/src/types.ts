@@ -44,4 +44,9 @@ export declare namespace Pog {
 		x: number,
 		y: number
 	}
+
+	export type Box = Point & {
+		w: number,
+		h: number
+	}
 }

@@ -35,10 +35,15 @@ case "$1" in
 		;;
 
 	dev)
-		# sq: ctrl+c to interrupt both from sh script
-		(cd demo && yarn dev)
-		# todo:
-		# (cd ts && yarn watch)
+		# link the ts npm package to the demo folder
+		(cd ts && yarn link &> /dev/null)
+		(cd demo && yarn link pogp &> /dev/null)
+
+		# run three commands and kill all of them if the last one receives a ctrl+c
+		# https://unix.stackexchange.com/questions/204480/run-multiple-commands-and-kill-them-as-one-in-bash
+		trap 'kill %1; kill %2' SIGINT
+		(cd ts && yarn watch) & $self unityWatch & (cd demo && yarn dev)
+		trap - SIGINT
 		;;
 
 	install)

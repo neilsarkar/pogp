@@ -6,12 +6,11 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "dev": "yarn wasmwatch & vite",
+    "dev": "yarn wasmwatch & vite --open",
     "build": "yarn wasmpack && vite build",
     "preview": "vite preview",
     "wasmpack": "wasm-pack build",
     "wasmwatch": "cargo watch -w src -s \"wasm-pack build\""
-
   },
   "devDependencies": {
     "typescript": "^4.8.4",

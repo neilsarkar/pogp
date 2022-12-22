@@ -26,7 +26,8 @@
     "build": "tsc -p tsconfig-skip-jest.json",
     "watch": "tsc -p tsconfig-skip-jest.json --watch",
     "test": "jest",
-    "prepublish": "yarn build"
+    "clean": "rm -rf dist",
+    "prepublish": "yarn clean && yarn build"
   },
   "devDependencies": {
     "@types/jest": "^29.2.4",
