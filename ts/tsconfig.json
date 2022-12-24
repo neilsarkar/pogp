@@ -3,7 +3,8 @@
 		"target": "es2020",
 		"outDir": "dist",
 		"esModuleInterop": true,
-		"moduleResolution": "node"
+		"moduleResolution": "node",
+		"removeComments": false
 	},
 	"exclude": [
 		"./node_modules/**",
