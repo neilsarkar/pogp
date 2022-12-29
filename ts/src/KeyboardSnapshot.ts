@@ -16,18 +16,23 @@ export class KeyboardSnapshot {
 		this.inputs = this.inputs.slice(0, BUFFER_LENGTH);
 	}
 
+	// todo: accept an array of keys
+	/** isKeyDown returns true only for the frame that the key is first pressed down */
 	isKeyDown(key: Key): boolean {
 		return this.isKey(key, 0) && !this.isKey(key, 1);
 	}
 
+	/** isKeyUp returns true only for the frame that the key is released */
 	isKeyUp(key: Key): boolean {
 		return !this.isKey(key, 0) && this.isKey(key, 1);
 	}
 
+	/** isKeyPressed returns true for every frame the key is being pressed down, including the first frame and excluding the frame it is released */
 	isKeyPressed(key: Key): boolean {
 		return this.isKey(key, 0);
 	}
 
+	/** isKey returns true for every frame the key is being pressed down, including the first frame and excluding the frame it is released */
 	isKey(key: Key, pastFrame: number = 0): boolean {
 		if (this.inputs.length <= pastFrame) { return false; }
 		return this.inputs[pastFrame].keys.indexOf(key) != -1
