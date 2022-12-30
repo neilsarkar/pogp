@@ -69,7 +69,10 @@ case "$1" in
 		;;
 
 	publish)
+		[[ -n $(git status --porcelain) ]] && echo 'Not publishing because there are uncommitted changes' && exit 1
 		$self bump
+		git add -A .
+		git commit -m "Bump version number"
 		(cd ts && yarn publish) || exit 1
 		(cd rs && cargo publish) || exit 1
 		;;
