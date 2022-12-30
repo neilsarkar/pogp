@@ -7,18 +7,17 @@ import { BrowserInput } from './BrowserInput';
  * @example
  * import { GameLoop } from 'pogp';
  *
- * // Create the application
- * const app = new Application();
- *
- * // Add the view to the DOM
- * document.body.appendChild(app.view);
- *
- * // ex, add display objects
- * app.stage.addChild(Sprite.from('something.png'));
+ * const gameLoop = new GameLoop((frame, now, dt, inputs) => {
+ *   console.log(frame, now, dt)
+ * 	 console.log()
+
  */
 export class GameLoop {
+	// todo: accept GameState as a generic argument
 	isApplicationRunning: boolean;
 	frame: bigint;
+	now: number;
+	pauseTime: number;
 	tick: Pog.Tick;
 	handle: number;
 
@@ -28,6 +27,8 @@ export class GameLoop {
 	constructor(tick: Pog.Tick) {
 		this.isApplicationRunning = true;
 		this.frame = 0n;
+		this.now = performance.now();
+		this.pauseTime = 0;
 		this.tick = tick;
 		// todo: expose keyboard input to avoid caller having to parse input buffer manually
 		this.browserInput = new BrowserInput();
@@ -63,9 +64,14 @@ export class GameLoop {
 	}
 
 	step() {
-		let startTime = performance.now();
-		this.tick(this.frame++, this.browserInput.readInput());
-		this.profileFrame(performance.now() - startTime);
+		let dt = performance.now() - this.now - this.pauseTime;
+		if (!this.isApplicationRunning) {
+			this.pauseTime += dt;
+			dt = 16.666666666;
+		}
+		this.now += dt;
+		this.tick(this.frame++, this.now, this.browserInput.readInput());
+		this.profileFrame(performance.now() - this.pauseTime - this.now);
 	}
 
 	togglePause() {
@@ -73,6 +79,7 @@ export class GameLoop {
 		if (!this.isApplicationRunning) {
 			cancelAnimationFrame(this.handle);
 		} else {
+			this.pauseTime += this.now - performance.now();
 			this.run();
 		}
 		console.log(`Game is ${(this.isApplicationRunning ? 'Running' : 'Paused')}`);

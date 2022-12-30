@@ -37,7 +37,7 @@ export declare namespace Pog {
 	}
 
 	export interface Tick {
-		(frame: bigint, inputs: ArrayBuffer): void;
+		(frame: bigint, now: number, inputs: ArrayBuffer): void;
 	}
 
 	export type Point = {

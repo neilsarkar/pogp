@@ -10,6 +10,7 @@ export class KeyboardSnapshot {
 		this.inputs = [];
 	}
 
+	/** addInput adds a frame of keyboard input */
 	addInput(input: Pog.KeyboardInput) : void {
 		// maintains a BUFFER_LENGTH lifo queue
 		this.inputs.unshift(input);

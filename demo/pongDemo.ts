@@ -20,7 +20,7 @@ button.addEventListener('click', () => {
 const gameLoop = new GameLoop(tick);
 gameLoop.run();
 
-function tick(frame: bigint, inputs: ArrayBuffer) {
+function tick(frame: bigint, now: number, inputs: ArrayBuffer) {
 	if (runtime == 'ts') {
 		pong.tick(frame, inputs);
 		render(pong.state);
