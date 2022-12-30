@@ -1,6 +1,6 @@
 [package]
 name = "pogp-demo"
-version = "0.0.6"
+version = "0.0.7"
 edition = "2021"
 authors = ["Neil Sarkar <neil@nullent.com>"]
 description = "This demonstrates the use of pogp for a pong game in browser and unity"
