@@ -9,8 +9,7 @@ import { BrowserInput } from './BrowserInput';
  *
  * const gameLoop = new GameLoop((frame, now, dt, inputs) => {
  *   console.log(frame, now, dt)
- * 	 console.log()
-
+ * })
  */
 export class GameLoop {
 	// todo: accept GameState as a generic argument
@@ -52,6 +51,14 @@ export class GameLoop {
 				this.step();
 			}
 		})
+
+		document.addEventListener('visibilitychange', (ev) => {
+			if (document.hidden) {
+				this.pause();
+			} else {
+				this.unpause();
+			}
+		})
 	}
 
 	// todo: show an overlay if the screen is not focused
@@ -64,32 +71,42 @@ export class GameLoop {
 	}
 
 	step() {
-		let dt = performance.now() - this.now - this.pauseTime;
+		let dt = performance.now() - this.pauseTime - this.now;
 		if (!this.isApplicationRunning) {
 			this.pauseTime += dt;
 			dt = 16.666666666;
 		}
 		this.now += dt;
 		this.tick(this.frame++, this.now, this.browserInput.readInput());
-		this.profileFrame(performance.now() - this.pauseTime - this.now);
+		if (this.isApplicationRunning) {
+			this.profileFrame(dt);
+		}
 	}
 
 	togglePause() {
-		this.isApplicationRunning = !this.isApplicationRunning;
-		if (!this.isApplicationRunning) {
-			cancelAnimationFrame(this.handle);
+		if (this.isApplicationRunning) {
+			this.pause();
 		} else {
-			this.pauseTime += performance.now() - this.now;
-			this.run();
+			this.unpause();
 		}
-		console.log(`Game is ${(this.isApplicationRunning ? 'Running' : 'Paused')}`);
+	}
+
+	pause() {
+		this.isApplicationRunning = false;
+		cancelAnimationFrame(this.handle);
+	}
+
+	unpause() {
+		this.isApplicationRunning = true;
+		this.pauseTime = performance.now() - this.now;
+		this.run()
 	}
 
 	// browser
 	// https://rob-blackbourn.github.io/blog/webassembly/wasm/array/arrays/javascript/c/2020/06/07/wasm-arrays.html
 
 	private profileFrame(ms: number) {
-		if (ms > 3) {
+		if (ms > 16) {
 			console.warn(`frame ${this.frame} took ${ms}ms`)
 		}
 	}

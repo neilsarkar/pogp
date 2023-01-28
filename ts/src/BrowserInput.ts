@@ -31,7 +31,6 @@ export class BrowserInput {
 		})
 
 		element.addEventListener('mouseup', (ev) => {
-			console.log('mouseDown is false');
 			this.mouse.isDown = false;
 		})
 
