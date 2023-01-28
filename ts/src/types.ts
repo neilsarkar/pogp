@@ -19,6 +19,17 @@ export declare namespace Pog {
 		productName?: string,
 	}
 
+	export type MouseInput = {
+		/** InputType, always InputType.Mouse */
+		type: InputType,
+		/** x coordinate in px */
+		x: number,
+		/** y coordinate in px */
+		y: number,
+		/** is mouse being clicked this frame */
+		isDown: boolean
+	}
+
 	export type KeyboardInput = {
 		type: InputType,
 		keys: Key[]

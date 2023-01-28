@@ -7,6 +7,9 @@ export const MAX_BUTTONS = 20;
 export const MAX_AXES = 10;
 export const KEYBOARD_LENGTH = 1 + 8 + 8; // type, long, long (16*8 = 128 key bools)
 export const KEYBOARD_KEY_COUNT = 128;
+export const MOUSE_OFFSET = KEYBOARD_LENGTH;
+export const MOUSE_LENGTH = 1 + 4 + 4 + 1; // type, x, y, bool for down
+export const GAMEPAD_OFFSET = KEYBOARD_LENGTH + MOUSE_LENGTH;
 
 export class MarshalInput {
 	static decodeGamepad(buffer: ArrayBuffer) : Pog.GamepadInput {
@@ -48,14 +51,17 @@ export class MarshalInput {
 		let {buttons, axes} = input;
 		buttons = buttons || [];
 		axes = axes || [];
+
+		const byteLength = MarshalInput.byteLength(buttons.length, axes.length)
 		const writer = new BinaryWriter(
 			new Uint8Array(
 				buffer,
-				KEYBOARD_LENGTH,
+				GAMEPAD_OFFSET,
 				MarshalInput.byteLength(buttons.length, axes.length)
 			)
 		);
 
+		writer.buffer.fill(0, 0, byteLength);
 		writer.writeUInt8(input.type);
 
 		writer.writeUInt16(buttons.length);
@@ -106,11 +112,56 @@ export class MarshalInput {
 			keys: []
 		}
 
+		if (input.type != InputType.Keyboard) {
+			throw new Error(`Expected to read keyboard input at position 0`);
+		}
+
 		for(let i = 0; i < KEYBOARD_KEY_COUNT; i++) {
 			if (reader.readBool()) {
 				input.keys.push(i)
 			}
 		}
+		return input;
+	}
+
+	static encodeMouse(buffer: ArrayBuffer, input: Pog.MouseInput) : Uint8Array {
+		const writer = new BinaryWriter(
+			new Uint8Array(
+				buffer,
+				MOUSE_OFFSET,
+				MOUSE_LENGTH
+			)
+		)
+
+		writer.buffer.fill(0, 0, MOUSE_LENGTH);
+		writer.writeUInt8(input.type);
+
+		writer.writeUInt32(input.x);
+		writer.writeUInt32(input.y);
+		writer.writeBool(input.isDown);
+
+		return writer.buffer;
+	}
+
+	static decodeMouse(buffer: ArrayBuffer) : Pog.MouseInput {
+		const reader = new BinaryReader(
+			new Uint8Array(buffer, MOUSE_OFFSET, MOUSE_LENGTH)
+		);
+
+		let input : Pog.MouseInput = {
+			type: reader.readUint8(),
+			x: 0,
+			y: 0,
+			isDown: false
+		}
+
+		if (input.type != InputType.Mouse) {
+			throw new Error(`Expected to read mouse input at position ${MOUSE_OFFSET}: ${buffer}`);
+		}
+
+		input.x = reader.readUint32();
+		input.y = reader.readUint32();
+		input.isDown = reader.readBool();
 		return input;
 	}
 
