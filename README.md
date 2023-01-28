@@ -44,13 +44,33 @@ Game developers have typically suffered from a more closed source mindset, with 
 
 I love games, and I believe that by embracing open standards and shared solutions across languages and game engines, there can be a better world for developers and players of games.
 
-## Project Status
+## Code Example (typescript/browser)
 
-The Pog Protocol is in a pre-alpha state. The protocol itself is still being defined, and client libraries currently only exist for rust.
+```ts
+import { GameLoop, MarshalInput, KeyboardSnapshot } from 'pogp';
 
-We are looking for domain experts to contribute to [libraries](#libraries) for each major game engine and runtime environment.
+const keyboard = new KeyboardSnapshot();
+const heroElement = document.body.appendChild('div') as HTMLElement;
 
-If you are interested in contributing or adding an environment to the list, please open a github issue or drop me a line on discord `nu11#1111` or neil at nullent.com
+let state = {
+	hero: { x: 0, y: 0 }
+};
+
+new GameLoop((frame, now, inputs) => {
+	// read inputs from binary buffer
+	keyboard.addInput(MarshalInput.decodeKeyboard(inputs));
+
+	// run update loop
+	if (keyboard.isKeyDown(Key.KeyD)) {
+		state.hero.x += 10;
+	} else if (keyboard.isKeyDown(Key.KeyA)) {
+		state.hero.x -= 10;
+	}
+
+	// render to screen
+	heroElement.style.transform = `translateX(${state.hero.x}px)`;
+})
+```
 
 ## Interactive Examples
 ---
@@ -58,6 +78,14 @@ If you are interested in contributing or adding an environment to the list, plea
 Pong
 
 https://pogprotocol.com
+
+## Project Status
+
+The Pog Protocol is in a pre-alpha state. The protocol itself is still being defined, and client libraries currently only exist for rust.
+
+We are looking for domain experts to contribute to [libraries](#libraries) for each major game engine and runtime environment.
+
+If you are interested in contributing or adding an environment to the list, please open a github issue or drop me a line on discord `nu11#1111` or neil at nullent.com
 
 ## Path to 1.0
 ---
