@@ -7,8 +7,9 @@ export class BrowserInput {
 	buffer: ArrayBuffer;
 	keys: boolean[];
 	keyboardSnapshot : KeyboardSnapshot;
+	mouse: Pog.MouseInput;
 
-	constructor() {
+	constructor(element: Element) {
 		this.keys = [];
 		this.buffer = new ArrayBuffer(
 			MarshalInput.byteLength(MAX_BUTTONS, MAX_AXES)
@@ -16,7 +17,28 @@ export class BrowserInput {
 
 		window.addEventListener('keydown', (ev) => { this.keys[Key[ev.code]] = true; })
 		window.addEventListener('keyup', (ev) => { this.keys[Key[ev.code]] = false; })
-		window.addEventListener('blur', () => { this.keys = []; })
+		window.addEventListener('blur', () => { this.keys = []; this.mouse.isDown = false })
+
+		this.mouse = {
+			x: 0, y: 0, isDown: false, type: InputType.Mouse
+		}
+		if (!element) {
+			throw new Error(`Tried to create BrowserInput but element is null`)
+		}
+
+		element.addEventListener('mousedown', (ev) => {
+			this.mouse.isDown = true;
+		})
+
+		element.addEventListener('mouseup', (ev) => {
+			console.log('mouseDown is false');
+			this.mouse.isDown = false;
+		})
+
+		element.addEventListener('mousemove', (ev) => {
+			this.mouse.x = (ev as MouseEvent).x;
+			this.mouse.y = (ev as MouseEvent).y;
+		})
 	}
 
 	readInput() : ArrayBuffer {
@@ -26,6 +48,8 @@ export class BrowserInput {
 		};
 
 		MarshalInput.encodeKeyboard(this.buffer, keyboardInput);
+
+		MarshalInput.encodeMouse(this.buffer, this.mouse);
 
 		const gamepads = navigator.getGamepads();
 		for(var gamepad of gamepads) {

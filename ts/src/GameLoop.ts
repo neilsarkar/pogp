@@ -24,14 +24,14 @@ export class GameLoop {
 	// inputs
 	browserInput : BrowserInput;
 
-	constructor(tick: Pog.Tick) {
+	constructor(tick: Pog.Tick, elementSelector: string = null) {
 		this.isApplicationRunning = true;
 		this.frame = 0n;
 		this.now = performance.now();
 		this.pauseTime = 0;
 		this.tick = tick;
 		// todo: expose keyboard input to avoid caller having to parse input buffer manually
-		this.browserInput = new BrowserInput();
+		this.browserInput = new BrowserInput(document.querySelector(elementSelector));
 		this.handle = -1;
 
 		window.addEventListener('keydown', (ev) => {
@@ -79,7 +79,7 @@ export class GameLoop {
 		if (!this.isApplicationRunning) {
 			cancelAnimationFrame(this.handle);
 		} else {
-			this.pauseTime += this.now - performance.now();
+			this.pauseTime += performance.now() - this.now;
 			this.run();
 		}
 		console.log(`Game is ${(this.isApplicationRunning ? 'Running' : 'Paused')}`);
