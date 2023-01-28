@@ -51,14 +51,17 @@ export class MarshalInput {
 		let {buttons, axes} = input;
 		buttons = buttons || [];
 		axes = axes || [];
+
+		const byteLength = MarshalInput.byteLength(buttons.length, axes.length)
 		const writer = new BinaryWriter(
 			new Uint8Array(
 				buffer,
-				KEYBOARD_LENGTH + MOUSE_LENGTH,
+				GAMEPAD_OFFSET,
 				MarshalInput.byteLength(buttons.length, axes.length)
 			)
 		);
 
+		writer.buffer.fill(0, 0, byteLength);
 		writer.writeUInt8(input.type);
 
 		writer.writeUInt16(buttons.length);
@@ -125,17 +128,18 @@ export class MarshalInput {
 		const writer = new BinaryWriter(
 			new Uint8Array(
 				buffer,
-				KEYBOARD_LENGTH,
+				MOUSE_OFFSET,
 				MOUSE_LENGTH
 			)
 		)
 
-		writer.buffer.fill(0, KEYBOARD_LENGTH, MOUSE_OFFSET);
+		writer.buffer.fill(0, 0, MOUSE_LENGTH);
 		writer.writeUInt8(input.type);
 
 		writer.writeUInt32(input.x);
 		writer.writeUInt32(input.y);
 		writer.writeBool(input.isDown);
+
 		return writer.buffer;
 	}
 
