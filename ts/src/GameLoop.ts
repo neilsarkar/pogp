@@ -34,11 +34,6 @@ export class GameLoop {
 		this.handle = -1;
 
 		window.addEventListener('keydown', (ev) => {
-			// https://stackoverflow.com/questions/8916620/disable-arrow-key-scrolling-in-users-browser
-			if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(ev.code) > -1) {
-				ev.preventDefault();
-			}
-
 			if (ev.shiftKey && ev.code == 'KeyP') {
 				this.togglePause();
 			}
@@ -52,11 +47,16 @@ export class GameLoop {
 			}
 		})
 
+		let isBlurred = false;
 		document.addEventListener('visibilitychange', (ev) => {
 			if (document.hidden) {
 				this.pause();
+				isBlurred = true;
 			} else {
-				this.unpause();
+				if (isBlurred) {
+					this.unpause();
+				}
+				isBlurred = false;
 			}
 		})
 	}
