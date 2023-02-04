@@ -19,6 +19,7 @@ export class GameLoop {
 	pauseTime: number;
 	tick: Pog.Tick;
 	handle: number;
+	isProfiling: boolean;
 
 	// inputs
 	browserInput : BrowserInput;
@@ -106,7 +107,7 @@ export class GameLoop {
 	// https://rob-blackbourn.github.io/blog/webassembly/wasm/array/arrays/javascript/c/2020/06/07/wasm-arrays.html
 
 	private profileFrame(ms: number) {
-		if (ms > 16) {
+		if (this.isProfiling && ms > 16) {
 			console.warn(`frame ${this.frame} took ${ms}ms`)
 		}
 	}
