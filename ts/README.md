@@ -1,4 +1,4 @@
-# POG Protocol Typescript ESM Package 0.0.10
+# POG Protocol Typescript ESM Package 0.0.11
 
 This library provides ESM Typescript functionality for the [POG Protocol](https://github.com/neilsarkar/pogp)
 

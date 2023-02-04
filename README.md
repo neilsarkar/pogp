@@ -1,4 +1,4 @@
-# Portable Open Game Protocol 0.0.10
+# Portable Open Game Protocol 0.0.11
 
 Making games should feel like playing games.
 
