@@ -19,6 +19,10 @@ export class BrowserInput {
 		window.addEventListener('keyup', (ev) => { this.keys[Key[ev.code]] = false; })
 		window.addEventListener('blur', () => { this.keys = []; this.mouse.isDown = false })
 
+		// ctrl+a leaves the a key pressed when selecting all
+		// https://dev.to/chromiumdev/detecting-select-all-on-the-web-2alo
+		document.addEventListener('selectionchange', () => { this.keys = []; this.mouse.isDown = false; })
+
 		this.mouse = {
 			x: 0, y: 0, isDown: false, type: InputType.Mouse
 		}

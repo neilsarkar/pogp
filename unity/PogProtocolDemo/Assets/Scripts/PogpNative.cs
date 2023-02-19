@@ -9,6 +9,7 @@ public static class PogpNative {
 	[DllImport(libName)]
 	public static extern void pogp_start(out IntPtr baton, out GameState g);
 
+	// TODO: include elapsed ms
 	[DllImport(libName)]
 	public static extern GameState pogp_tick(IntPtr baton, long frame, byte[] inputs, int len);
 }
