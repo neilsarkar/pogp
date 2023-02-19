@@ -50,11 +50,11 @@ checksum = "86f0b0d4bf799edbc74508c1e8bf170ff5f41238e5f8225603ca7caaae2b7860"
 
 [[package]]
 name = "pogp"
-version = "0.0.11"
+version = "0.0.12"
 
 [[package]]
 name = "pogp-demo"
-version = "0.0.11"
+version = "0.0.12"
 dependencies = [
  "cfg-if",
  "console_error_panic_hook",
