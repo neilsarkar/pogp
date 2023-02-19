@@ -1,6 +1,6 @@
 [package]
 name = "pogp"
-version = "0.0.11"
+version = "0.0.12"
 edition = "2021"
 authors = ["Neil Sarkar <neil@nullent.com>"]
 description = "The POG Protocol for game development defines a portable game loop and language-neutral binary representations of Inputs and State."
