@@ -68,6 +68,10 @@ case "$1" in
 		(cd rs && cargo test) || exit 1
 		;;
 
+	watch)
+		(cd ts && yarn watch) || exit 1
+		;;
+
 	publish)
 		[[ -n $(git status --porcelain) ]] && echo 'Not publishing because there are uncommitted changes' && exit 1
 		$self bump
@@ -174,6 +178,7 @@ EOF
 		echo "🏗  pog build   - build for web deployment"
 		echo "🚢 pog publish - publish pogp libraries"
 		echo "🛠  pog dev     - live reload of rust and typescript"
+		echo "🔁 pog watch   - output dist.js for linked package development"
 		echo "✅ pog test    - run unit tests"
 		;;
 esac

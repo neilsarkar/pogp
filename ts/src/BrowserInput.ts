@@ -19,9 +19,7 @@ export class BrowserInput {
 		window.addEventListener('keyup', (ev) => { this.keys[Key[ev.code]] = false; })
 		window.addEventListener('blur', () => { this.keys = []; this.mouse.isDown = false })
 
-		// ctrl+a leaves the a key pressed when selecting all
-		// https://dev.to/chromiumdev/detecting-select-all-on-the-web-2alo
-		document.addEventListener('selectionchange', () => { this.keys = []; this.mouse.isDown = false; })
+		listenSelectAll(this);
 
 		this.mouse = {
 			x: 0, y: 0, isDown: false, type: InputType.Mouse
@@ -64,6 +62,32 @@ export class BrowserInput {
 
 		return this.buffer;
 	}
+}
+
+function listenSelectAll(browserInput: BrowserInput) {
+	// ctrl+a leaves the a key pressed when selecting all
+	// https://dev.to/chromiumdev/detecting-select-all-on-the-web-2alo
+	const startExtent = document.createElement('div');
+	const endExtent = document.createElement('div');
+	startExtent.classList.add('pogp-extent');
+	endExtent.classList.add('pogp-extent');
+	const style = document.createElement('style');
+	document.head.appendChild(style);
+	style.innerHTML = '.pogp-extent { position: fixed; opacity: 0; user-select: auto; } .pogp-extent::after { content: \'\\200b\'; }';
+	document.body.prepend(startExtent);
+	document.body.appendChild(endExtent);
+	document.addEventListener('selectionchange', () => {
+		const isExtent = (node) => {
+			return node instanceof Element && node.classList.contains('pogp-extent');
+		};
+
+		// check the selection extends over two extent nodes (top and bottom)
+		const s = window.getSelection();
+		if (!isExtent(s.anchorNode) || !isExtent(s.focusNode)) {
+			return;
+		}
+		browserInput.keys = []; browserInput.mouse.isDown = false;
+	})
 }
 
 function readGamepad(gamepad: Gamepad) : Pog.GamepadInput {

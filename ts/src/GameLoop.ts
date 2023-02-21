@@ -48,16 +48,9 @@ export class GameLoop {
 			}
 		})
 
-		let isBlurred = false;
 		document.addEventListener('visibilitychange', (ev) => {
 			if (document.hidden) {
 				this.pause();
-				isBlurred = true;
-			} else {
-				if (isBlurred) {
-					this.unpause();
-				}
-				isBlurred = false;
 			}
 		})
 	}
