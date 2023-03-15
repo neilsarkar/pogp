@@ -22,7 +22,7 @@ export class MarshalInput {
 
 		var reader = new BinaryReader(new Uint8Array(
 			buffer,
-			KEYBOARD_LENGTH
+			GAMEPAD_OFFSET
 		));
 
 		input.type = reader.readUint8();
@@ -52,12 +52,12 @@ export class MarshalInput {
 		buttons = buttons || [];
 		axes = axes || [];
 
-		const byteLength = MarshalInput.byteLength(buttons.length, axes.length)
+		const byteLength = MarshalInput.gamepadByteLength(buttons.length, axes.length)
 		const writer = new BinaryWriter(
 			new Uint8Array(
 				buffer,
 				GAMEPAD_OFFSET,
-				MarshalInput.byteLength(buttons.length, axes.length)
+				MarshalInput.gamepadByteLength(buttons.length, axes.length)
 			)
 		);
 
@@ -165,7 +165,11 @@ export class MarshalInput {
 		return input;
 	}
 
-	static byteLength(numButtons: number, numAxes: number) : number {
-		return 1 + 2 + 2 + 69 * numButtons + 129 * numAxes;
+	static byteLength(numButtons: number = MAX_BUTTONS, numAxes: number = MAX_AXES): number {
+		return KEYBOARD_LENGTH + MOUSE_LENGTH + this.gamepadByteLength(numButtons, numAxes);
+	}
+
+	static gamepadByteLength(numButtons: number = MAX_BUTTONS, numAxes: number = MAX_AXES) : number {
+		return 1 + 2 + 2 + (1+4) * numButtons + (1+8+8) * numAxes;
 	}
 }
