@@ -25,7 +25,7 @@
   "scripts": {
     "build": "tsc -p tsconfig-skip-jest.json",
     "watch": "tsc -p tsconfig-skip-jest.json --watch",
-    "test": "jest",
+    "test": "vitest",
     "clean": "rm -rf dist",
     "prepublish": "yarn clean && yarn build"
   },

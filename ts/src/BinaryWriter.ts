@@ -1,5 +1,6 @@
 export class BinaryWriter {
 	buffer: Uint8Array;
+	encoder: TextEncoder;
 	offset: number; 	 // this is the current offset in bytes
 	bitOffset: number; // current offset in bits within the given byte for bools
 
@@ -7,6 +8,7 @@ export class BinaryWriter {
 		this.buffer = buffer || new Uint8Array(length);
 		this.offset = 0;
 		this.bitOffset = 0;
+		this.encoder = new TextEncoder()
 	}
 
 	writeBool(value: boolean) {
@@ -57,7 +59,16 @@ export class BinaryWriter {
 	}
 
 	writeByte(value: number) {
+		this.checkOffsets(1);
 		this.writeUInt8(value);
+	}
+
+	writeString(str: string) {
+		const serializedString = this.encoder.encode(str)
+		this.writeUInt32(serializedString.length)
+		this.checkOffsets(serializedString.length)
+		this.buffer.set(serializedString, this.offset)
+		this.offset += serializedString.length;
 	}
 
 	private checkOffsets(byteLength: number) {

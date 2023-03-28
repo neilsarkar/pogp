@@ -1,6 +1,7 @@
 import {BinaryWriter} from '../src/BinaryWriter';
 import assert from 'assert';
-import {describe, it} from 'vitest';
+import {describe, expect, it} from 'vitest';
+import {toBinaryString} from '../src/lib'
 
 describe('BinaryWriter', () => {
 	describe('writeBool', function() {
@@ -19,7 +20,7 @@ describe('BinaryWriter', () => {
 				bools.forEach((binaryValue) => {
 					writer.writeBool(binaryValue);
 				})
-				assert.equal(writer.buffer[byteIndex], base10)
+				assert.equal(writer.buffer[byteIndex!], base10)
 			})
 		})
 
@@ -135,6 +136,36 @@ describe('BinaryWriter', () => {
 				writer.writeInt64(int64)
 
 				assert.equal(int64Array[0].toString(), int64.toString())
+			})
+		})
+	})
+
+	describe('writeString', function() {
+		let table = [
+			'a',
+			'asjdch/sdcsaDCMKASJMCKJNO@I#23490',
+			'❤️',
+			'🕳️🌱👨‍👩‍👧‍👦✌🏽',
+			'𒀐', // 4 byte character
+			'😀œ´®†¥¨ˆøπ¬˚∆˙©ƒ∂ßåΩ≈ç√∫˜µ≤ユーザーコードa' // https://stackoverflow.com/questions/63905684/how-can-a-3-byte-wide-utf-8-character-only-use-a-single-utf-16-code-unit
+		];
+
+		table.forEach((str) => {
+			it(`should write ${str}`, () => {
+				const encoder = new TextEncoder()
+				const encodedString = encoder.encode(str)
+
+				const arrayBuffer = new ArrayBuffer(4 + encodedString.length);
+				const uint8Buffer = new Uint8Array(arrayBuffer)
+				const writer = new BinaryWriter(uint8Buffer);
+				writer.writeString(str)
+				const serializedLength = (new Uint32Array(arrayBuffer, 0, 1))[0]
+				expect(serializedLength).toEqual(encodedString.length);
+
+				const decoder = new TextDecoder();
+				const stringBuffer = new Uint8Array(arrayBuffer, 4, serializedLength)
+				const decodedString = decoder.decode(stringBuffer)
+				expect(decodedString).toEqual(str);
 			})
 		})
 	})

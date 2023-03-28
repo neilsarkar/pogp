@@ -2,11 +2,13 @@ export class BinaryReader {
 	offset: number;
 	bitOffset: number;
 	dataView: DataView;
+	decoder: TextDecoder;
 
 	constructor(buffer: Uint8Array) {
 		this.offset = 0;
 		this.bitOffset = 0;
 		this.dataView = new DataView(buffer.buffer, buffer.byteOffset, buffer.byteLength);
+		this.decoder = new TextDecoder()
 	}
 
 	readBool() : boolean {
@@ -38,5 +40,13 @@ export class BinaryReader {
 		const ret = this.dataView.getBigInt64(this.offset, true);
 		this.offset += 8;
 		return ret;
+	}
+
+	readString() : string {
+		const length = this.readUint32();
+		const bytes = new Uint8Array(this.dataView.buffer, this.offset, length);
+		const str = this.decoder.decode(bytes)
+		this.offset += length;
+		return str;
 	}
 }

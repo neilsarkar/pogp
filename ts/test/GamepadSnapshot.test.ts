@@ -1,7 +1,7 @@
 import { ButtonPosition, InputType } from "../src/enums";
 import { GamepadSnapshot } from "../src/GamepadSnapshot";
 import { Pog } from "../src/types";
-import {describe, it} from 'vitest';
+import {describe, expect, it} from 'vitest';
 
 describe('GamepadSnapshot', function() {
 	describe('.isButtonDown', function() {
