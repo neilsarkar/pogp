@@ -1,6 +1,6 @@
-import { BinaryReader } from "./BinaryReader";
-import { BinaryWriter } from "./BinaryWriter";
-import { InputType } from "./enums";
+import { BinaryReader } from "./BinaryReader.js";
+import { BinaryWriter } from "./BinaryWriter.js";
+import { InputType } from "./enums.js";
 import { Pog } from "./types";
 
 export const MAX_BUTTONS = 20;

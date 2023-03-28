@@ -1,5 +1,6 @@
 import {BinaryReader} from '../src/BinaryReader';
 import {BinaryWriter} from '../src/BinaryWriter';
+import {describe, it} from 'vitest';
 import assert from 'assert';
 
 describe('BinaryReader', function() {

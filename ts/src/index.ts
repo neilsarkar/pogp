@@ -1,7 +1,9 @@
-export {GameLoop} from "./GameLoop";
-export {GamepadSnapshot} from "./GamepadSnapshot";
-export {KeyboardSnapshot} from "./KeyboardSnapshot";
-export {MarshalInput, MAX_BUTTONS, MAX_AXES} from "./MarshalInput";
-export {Hand, Key, InputType, ButtonPosition} from "./enums";
+export {GameLoop} from "./GameLoop.js";
+export {GamepadSnapshot} from "./GamepadSnapshot.js";
+export {KeyboardSnapshot} from "./KeyboardSnapshot.js";
+export {MarshalInput, MAX_BUTTONS, MAX_AXES} from "./MarshalInput.js";
+export {Hand, Key, InputType, ButtonPosition} from "./enums.js";
+export {BinaryWriter} from "./BinaryWriter.js";
+export {BinaryReader} from "./BinaryReader.js";
 
-export {clamp, toHexString, toBinaryString} from "./lib";
+export {clamp, toHexString, toBinaryString} from "./lib.js";

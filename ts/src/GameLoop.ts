@@ -1,5 +1,5 @@
 import type { Pog } from './types';
-import { BrowserInput } from './BrowserInput';
+import { BrowserInput } from './BrowserInput.js';
 
 /**
  * Class to run a pogp game loop

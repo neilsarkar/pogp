@@ -1,5 +1,6 @@
 import {BinaryWriter} from '../src/BinaryWriter';
 import assert from 'assert';
+import {describe, it} from 'vitest';
 
 describe('BinaryWriter', () => {
 	describe('writeBool', function() {

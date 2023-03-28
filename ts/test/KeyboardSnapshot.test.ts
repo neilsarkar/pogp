@@ -1,5 +1,6 @@
 import { InputType, Key } from "../src/enums";
 import { KeyboardSnapshot } from "../src/KeyboardSnapshot"
+import {describe, it, expect} from 'vitest';
 
 describe('KeyboardSnapshot', function() {
 	describe('.isKeyDown', function() {

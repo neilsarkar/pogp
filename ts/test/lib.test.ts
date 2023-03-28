@@ -1,5 +1,6 @@
 import {toBinaryString } from '../src/lib';
 import assert from 'assert';
+import {describe, it} from 'vitest';
 
 describe('toBinaryString', () => {
 	let table : [number[], string][] = [

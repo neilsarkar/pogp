@@ -1,6 +1,6 @@
-import { ButtonPosition, Hand, InputType, Key } from "./enums";
-import { KeyboardSnapshot } from "./KeyboardSnapshot";
-import { MarshalInput, MAX_AXES, MAX_BUTTONS } from "./MarshalInput";
+import { ButtonPosition, Hand, InputType, Key } from "./enums.js";
+import { KeyboardSnapshot } from "./KeyboardSnapshot.js";
+import { MarshalInput, MAX_AXES, MAX_BUTTONS } from "./MarshalInput.js";
 import { Pog } from "./types";
 
 export class BrowserInput {
