@@ -113,7 +113,7 @@ export class MarshalInput {
 		}
 
 		if (input.type != InputType.Keyboard) {
-			throw new Error(`Expected to read keyboard input at position 0`);
+			throw new Error(`Expected to read keyboard input at position 0, got: ${input.type}`);
 		}
 
 		for(let i = 0; i < KEYBOARD_KEY_COUNT; i++) {

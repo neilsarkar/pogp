@@ -1,13 +1,16 @@
 export class BinaryWriter {
 	buffer: Uint8Array;
-	encoder: TextEncoder;
 	offset: number; 	 // this is the current offset in bytes
 	bitOffset: number; // current offset in bits within the given byte for bools
+
+	private encoder: TextEncoder;
+	private dataView: DataView;
 
 	constructor(buffer?: Uint8Array | null, length?: number) {
 		this.buffer = buffer || new Uint8Array(length);
 		this.offset = 0;
 		this.bitOffset = 0;
+		this.dataView = new DataView(this.buffer.buffer)
 		this.encoder = new TextEncoder()
 	}
 
@@ -59,8 +62,14 @@ export class BinaryWriter {
 	}
 
 	writeByte(value: number) {
-		this.checkOffsets(1);
+		// checkoffsets happens in here
 		this.writeUInt8(value);
+	}
+
+	writeDouble(value: number) {
+		this.checkOffsets(8);
+		this.dataView.setFloat64(this.offset, value, true);
+		this.offset += 8;
 	}
 
 	writeString(str: string) {

@@ -169,4 +169,31 @@ describe('BinaryWriter', () => {
 			})
 		})
 	})
+
+	describe('writeDouble', function() {
+		let table = [
+			0,
+			1,
+			-1,
+			469,
+			1.5,
+			16/9,
+			Math.sqrt(55.659),
+			Number.MAX_VALUE,
+			-Number.MAX_VALUE,
+			Infinity,
+			-Infinity
+		]
+
+		table.forEach((dbl) => {
+			it(`should write ${dbl}`, () => {
+				const buffer = new Uint8Array(8);
+				const writer = new BinaryWriter(buffer);
+				writer.writeDouble(dbl)
+				const doubleArray = new Float64Array(buffer.buffer);
+				console.log(toBinaryString(buffer), doubleArray);
+				expect(doubleArray[0]).toEqual(dbl);
+			})
+		})
+	})
 })

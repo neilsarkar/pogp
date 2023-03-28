@@ -42,6 +42,12 @@ export class BinaryReader {
 		return ret;
 	}
 
+	readDouble() : number {
+		const ret = this.dataView.getFloat64(this.offset, true);
+		this.offset += 8;
+		return ret;
+	}
+
 	readString() : string {
 		const length = this.readUint32();
 		const bytes = new Uint8Array(this.dataView.buffer, this.offset, length);
