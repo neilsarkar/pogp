@@ -4,7 +4,7 @@ import { InputType } from "./enums.js";
 import { Pog } from "./types";
 
 export const MAX_BUTTONS = 20;
-export const MAX_AXES = 10;
+export const MAX_AXES = 2;
 export const KEYBOARD_LENGTH = 1 + 8 + 8; // type, long, long (16*8 = 128 key bools)
 export const KEYBOARD_KEY_COUNT = 128;
 export const MOUSE_OFFSET = KEYBOARD_LENGTH;

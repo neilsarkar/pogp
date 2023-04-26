@@ -12,7 +12,7 @@ export class BrowserInput {
 	constructor(element: Element) {
 		this.keys = [];
 		this.buffer = new ArrayBuffer(
-			MarshalInput.byteLength(MAX_BUTTONS, MAX_AXES)
+			MarshalInput.byteLength(20, MAX_AXES)
 		);
 
 		window.addEventListener('keydown', (ev) => { this.keys[Key[ev.code]] = true; })
