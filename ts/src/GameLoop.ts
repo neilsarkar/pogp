@@ -24,14 +24,17 @@ export class GameLoop {
 	// inputs
 	browserInput : BrowserInput;
 
-	constructor(tick: Pog.Tick, elementSelector: string = null) {
+	constructor(tick: Pog.Tick, options: Pog.GameLoopOptions | undefined) {
+		console.log('haaaaalp');
 		this.isApplicationRunning = true;
 		this.frame = 0n;
 		this.now = performance.now();
 		this.pauseTime = 0;
 		this.tick = tick;
 		// todo: expose keyboard input to avoid caller having to parse input buffer manually
-		this.browserInput = new BrowserInput(document.querySelector(elementSelector));
+		this.browserInput = new BrowserInput(
+			options?.elementSelector ? document.querySelector(options.elementSelector) : document.body
+		);
 		this.handle = -1;
 
 		window.addEventListener('keydown', (ev) => {
@@ -48,11 +51,13 @@ export class GameLoop {
 			}
 		})
 
-		document.addEventListener('visibilitychange', (ev) => {
-			if (document.hidden) {
-				this.pause();
-			}
-		})
+		if (options?.pauseOnBlur) {
+			document.addEventListener('visibilitychange', (ev) => {
+				if (document.hidden) {
+					this.pause();
+				}
+			})
+		}
 	}
 
 	// todo: show an overlay if the screen is not focused

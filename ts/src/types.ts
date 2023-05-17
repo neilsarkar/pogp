@@ -30,6 +30,11 @@ export declare namespace Pog {
 		isDown: boolean
 	}
 
+	export type GameLoopOptions = {
+		pauseOnBlur?: boolean,
+		elementSelector?: string
+	}
+
 	export type KeyboardInput = {
 		type: InputType,
 		keys: Key[]
