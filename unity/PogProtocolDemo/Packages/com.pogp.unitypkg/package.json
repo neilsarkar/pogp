@@ -1,6 +1,6 @@
 {
 	"name": "com.pogp.unitypkg",
-	"version": "0.0.17",
+	"version": "0.0.18",
 	"author": "Neil Sarkar",
 	"displayName": "POG Protocol",
 	"description": "Portable Open Game Protocol - A language neutral portable game loop"
