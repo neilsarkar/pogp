@@ -25,7 +25,6 @@ export class GameLoop {
 	browserInput : BrowserInput;
 
 	constructor(tick: Pog.Tick, options: Pog.GameLoopOptions | undefined) {
-		console.log('haaaaalp');
 		this.isApplicationRunning = true;
 		this.frame = 0n;
 		this.now = performance.now();
